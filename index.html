@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto HTML + Bootstrap + JS</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Mi Proyecto</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#sobre">Sobre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contacto">Contacto</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero-section bg-light py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <h3>
+                        Mi tabla dinamica
+                    </h3>
+                    <table class="table table-striped trebeca" >
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Edad</th>
+                                <th>Ciudad</th>
+                                <th>
+                                    <button type="button" class="btn btn-success btn-sm me-1 btn-add-row">
+                                        <i class="fas fa-plus"></i> Añadir
+                                    </button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ana</td>
+                                <td>28</td>
+                                <td>Madrid</td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm me-1 edit-btn">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm delete-btn">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Juan</td>
+                                <td>34</td>
+                                <td>Barcelona</td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm me-1 edit-btn">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm delete-btn">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Laura</td>
+                                <td>25</td>
+                                <td>Valencia</td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm me-1 edit-btn">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm delete-btn">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Total de registros:</td>
+                                <td class="fw-bold" id="totalCount">3</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    
+                    <!-- Modal para añadir/editar registro -->
+                    <div class="modal fade" id="personModal" tabindex="-1" aria-labelledby="personModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="personModalLabel">Añadir Persona</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="personForm">
+                                        <div class="mb-3">
+                                            <label for="personName" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" id="personName" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="personAge" class="form-label">Edad</label>
+                                            <input type="number" class="form-control" id="personAge" min="1" max="120" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="personCity" class="form-label">Ciudad</label>
+                                            <input type="text" class="form-control" id="personCity" required>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-primary" id="savePersonBtn">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2025 Mi Proyecto. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p>Desarrollado con ❤️ usando Bootstrap</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom JavaScript -->
+    <script src="js/script.js"></script>
+    <script>
+        // trebeca.js
+        const data = [
+            {name: 'Ana', age: 28, city: 'Madrid'},
+            {name: 'Juan', age: 34, city: 'Barcelona'},
+            {name: 'Laura', age: 25, city: 'Valencia'}
+        ];
+
+        const config_default = {
+            table: {
+                cols: [
+                    {label: 'Nombre', field: 'name', type : 'text'},
+                    {label: 'Edad', field: 'age', type: 'number', min: 1, max: 120},
+                    {label: 'Ciudad', field: 'city', type: 'text'},
+                    {label: '*', field: 'actions', type: 'button', buttons: ["add", "edit", "delete"]}
+                ],
+                footer: {
+                    label: 'Total de registros:',
+                    field: 'count',
+                    type: 'text'
+                }
+            },
+            tableClass: 'trebeca',
+            addButtonClass: 'btn-add-row',
+            editButtonClass: 'edit-btn',
+            deleteButtonClass: 'delete-btn',
+            totalCountId: 'totalCount'
+        };
+        const trebeca = (config, data) => {
+            const table_rebeca = document.querySelector('.trebeca');
+            const btnadd = table_rebeca.querySelector('.btn-add-row');
+            const tableHead = table_rebeca.querySelector('thead');
+            const tableBody = table_rebeca.querySelector('tbody');
+            const tableFoot = table_rebeca.querySelector('tfoot');
+
+            btnadd.addEventListener('click', function() {
+                const newRow = document.createElement('tr');
+                console.log(tableHead.children[0]);
+                
+                /*for (const key in tableHead.) {
+                    console.log(tableHead[key]);
+                    
+                }*/
+                newRow.innerHTML = `
+                    <td>Nuevo Nombre</td>
+                    <td>Nuevo Edad</td>
+                    <td>Nueva Ciudad</td>
+                    <td>
+                        <button type="button" class="btn btn-warning btn-sm me-1 edit-btn">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm delete-btn">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                    </td>`;
+                
+                newRow.style.opacity = '0';
+                newRow.style.transform = 'translateY(-20px)';
+                tableBody.insertBefore(newRow, tableBody.firstChild);
+
+                setTimeout(() => {
+                    newRow.style.transition = 'all 0.3s ease';
+                    newRow.style.opacity = '1';
+                    newRow.style.transform = 'translateY(0)';
+                }, 50);
+                
+                updateTotalCount();
+            });
+
+            function updateTotalCount() {
+                const totalCount = document.getElementById('totalCount');
+                totalCount.textContent = tableBody.rows.length;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', trebeca(config_default, data));
+    </script>
+</body>
+</html>
