@@ -49,7 +49,7 @@
                                 <th>Ciudad</th>
                                 <th>
                                     <button type="button" class="btn btn-success btn-sm me-1 btn-add-row">
-                                        <i class="fas fa-plus"></i> Añadir
+                                        <i class="fas fa-plus"></i>
                                     </button>
                                 </th>
                             </tr>
@@ -61,10 +61,10 @@
                                 <td>Madrid</td>
                                 <td>
                                     <button type="button" class="btn btn-warning btn-sm me-1 edit-btn">
-                                        <i class="fas fa-edit"></i> Editar
+                                        <i class="fas fa-edit"></i>
                                     </button>
                                     <button type="button" class="btn btn-danger btn-sm delete-btn">
-                                        <i class="fas fa-trash"></i> Eliminar
+                                        <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -74,10 +74,10 @@
                                 <td>Barcelona</td>
                                 <td>
                                     <button type="button" class="btn btn-warning btn-sm me-1 edit-btn">
-                                        <i class="fas fa-edit"></i> Editar
+                                        <i class="fas fa-edit"></i>
                                     </button>
                                     <button type="button" class="btn btn-danger btn-sm delete-btn">
-                                        <i class="fas fa-trash"></i> Eliminar
+                                        <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -87,10 +87,10 @@
                                 <td>Valencia</td>
                                 <td>
                                     <button type="button" class="btn btn-warning btn-sm me-1 edit-btn">
-                                        <i class="fas fa-edit"></i> Editar
+                                        <i class="fas fa-edit"></i>
                                     </button>
                                     <button type="button" class="btn btn-danger btn-sm delete-btn">
-                                        <i class="fas fa-trash"></i> Eliminar
+                                        <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -164,8 +164,10 @@
         // trebeca.js
         const data = [
             {name: 'Ana', age: 28, city: 'Madrid'},
-            {name: 'Juan', age: 34, city: 'Barcelona'},
-            {name: 'Laura', age: 25, city: 'Valencia'}
+            {name: 'Juana', age: 34, city: 'Barcelona'},
+            {name: 'Laura', age: 25, city: 'Valencia'},
+            {name: 'Rebeca', age: 25, city: 'Valencia'},
+            {name: 'Fernanda', age: 20, city: 'Pachuca'}
         ];
 
         const config_default = {
@@ -188,6 +190,7 @@
             deleteButtonClass: 'delete-btn',
             totalCountId: 'totalCount'
         };
+
         const trebeca = (config, data) => {
             const table_rebeca = document.querySelector('.trebeca');
             const btnadd = table_rebeca.querySelector('.btn-add-row');
@@ -195,10 +198,27 @@
             const tableBody = table_rebeca.querySelector('tbody');
             const tableFoot = table_rebeca.querySelector('tfoot');
 
+            const tmp = tableHead.innerHTML;
+            tableHead.innerHTML = "";
+
+            if(typeof config.table === "object"){
+                const table = config.table;
+                if(typeof table.cols === "object"){
+                    const cols = table.cols;
+                    const ncols = cols.length;
+                    const tr_h = document.createElement('tr');
+                    for(let col in cols){
+                        const th = document.createElement('th');
+                        th.textContent = cols[col].label;
+                        tr_h.appendChild(th);
+                    }
+                    tableHead.appendChild(tr_h);
+                }
+            }
+
             btnadd.addEventListener('click', function() {
                 const newRow = document.createElement('tr');
                 console.log(tableHead.children[0]);
-                
                 /*for (const key in tableHead.) {
                     console.log(tableHead[key]);
                     
