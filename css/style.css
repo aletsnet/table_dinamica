@@ -1,0 +1,14 @@
+.td_editable {
+    background-color: #f9f9f9;
+    border: 1px dashed #ccc;
+    margin-top: 1px;
+    padding: 4px;
+    cursor: text;
+    border-radius: 6px;
+}
+
+.td_editable:focus {
+    outline: none;
+    border: 1px solid #007bff;
+    background-color: #fff;
+}
