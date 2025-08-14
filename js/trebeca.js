@@ -60,11 +60,20 @@ const trebeca = (config, data) => {
                                 const button = document.createElement('button');
                                 button.type = 'button';
                                 button.dataset.type = "save";
-                                button.className = 'btn btn-success btn-sm save-btn';
+                                button.className = 'btn btn-success btn-sm me-1 save-btn';
                                 button.innerHTML = '<i class="fas fa-save"></i>';
                                 //button.style = "display: normal;";
                                 button.addEventListener('click', (event) => { save_item(event); });
                                 td.appendChild(button);
+
+                                const button_cancel = document.createElement('button');
+                                button_cancel.type = 'button';
+                                button_cancel.dataset.type = "cancel";
+                                button_cancel.className = 'btn btn-secondary btn-sm cancel-btn';
+                                button_cancel.innerHTML = '<i class="fas fa-times"></i>';
+                                //button_cancel.style = "display: none;";
+                                button_cancel.addEventListener('click', (event) => { cancel_item(event); });
+                                td.appendChild(button_cancel);
                             }
                             break;
                         default:
@@ -135,6 +144,9 @@ const trebeca = (config, data) => {
             }
 
             const remove_item = (event) => {
+                if(!confirm("Está seguro de eliminar este elemento?")){
+                    return;
+                }
                 const td_bts = event.target.closest('td');
                 const tr_row = td_bts.closest('tr');
                 tr_row.remove();

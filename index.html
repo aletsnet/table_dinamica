@@ -167,11 +167,11 @@
     <script>
         // trebeca.js
         const data = [
-            {name: 'Ana', age: 28, city: 'Madrid'},
-            {name: 'Juana', age: 34, city: 'Barcelona'},
-            {name: 'Laura', age: 25, city: 'Valencia'},
-            {name: 'Rebeca', age: 25, city: 'Valencia'},
-            {name: 'Fernanda', age: 20, city: 'Pachuca'}
+            {id: 1, name: 'Ana', age: 28, city: 'Madrid'},
+            {id: 2, name: 'Juana', age: 34, city: 'Barcelona'},
+            {id: 3, name: 'Laura', age: 25, city: 'Valencia'},
+            {id: 4, name: 'Rebeca', age: 25, city: 'Valencia'},
+            {id: 5, name: 'Fernanda', age: 20, city: 'Pachuca'}
         ];
 
         const config_default = {
@@ -180,7 +180,7 @@
                     {label: 'Nombre', field: 'name', type : 'text'},
                     {label: 'Edad', field: 'age', type: 'number', min: 1, max: 120},
                     {label: 'Ciudad', field: 'city', type: 'text'},
-                    {label: '*', field: 'actions', type: 'button', buttons: ["add", "edit", "delete", "save"]}
+                    {label: '*', field: 'actions', type: 'button', buttons: ["add", "edit", "delete", "save", "gedit"]}
                 ],
                 footer: {
                     label: 'Total de registros:',
@@ -197,51 +197,23 @@
         };
 
         const btn_add = () => {
-            //const id = event.target.iCjmh$2025tid;
-            /*
-            Swal.fire({
-                title: 'Funcion para Agregar! todos',
-                text: 'nuevo registro',
-                icon: 'success',
-                timer: 2000,
-                showConfirmButton: false
-            });*/
+            console.log("Agregar nuevo registro");
         }
         
         const btn_edit = (event) => {
             const id = event.target.id;
-
-            Swal.fire({
-                title: 'Funcion para Editar!',
-                text: 'editar registro',
-                icon: 'info',
-                timer: 2000,
-                showConfirmButton: false
-            });
+            console.log("Editar registro id:", id);
+            
         }
 
         const btn_delete = (event) => {
             const id = event.target.id;
-
-            Swal.fire({
-                title: 'Funcion para Eliminar!',
-                text: 'eliminar registro',
-                icon: 'warning',
-                timer: 2000,
-                showConfirmButton: false
-            });
+            console.log("Eliminar registro id:", id);
         }
 
         const btn_save = (event) => {
             const id = event.target.id;
-
-            Swal.fire({
-                title: 'Funcion para Guardar!',
-                text: 'guardar cambios',
-                icon: 'success',
-                timer: 2000,
-                showConfirmButton: false
-            });
+            console.log("Guardar registro id:", id);
         }
 
         document.addEventListener('DOMContentLoaded', trebeca(config_default, data));
