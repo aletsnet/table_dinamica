@@ -167,11 +167,11 @@
     <script>
         // trebeca.js
         const data = [
-            {id: 1, name: 'Ana', age: 28, city: 'Madrid'},
-            {id: 2, name: 'Juana', age: 34, city: 'Barcelona'},
-            {id: 3, name: 'Laura', age: 25, city: 'Valencia'},
-            {id: 4, name: 'Rebeca', age: 25, city: 'Valencia'},
-            {id: 5, name: 'Fernanda', age: 20, city: 'Pachuca'}
+            {id: 1, name: 'Ana', age: 28, city: 'Madrid', phone: '123-456-7890', email: 'ana@example.com', salary: 3000},
+            {id: 2, name: 'Juana', age: 34, city: 'Barcelona', phone: '234-567-8901', email: 'juana@example.com', salary: 4000},
+            {id: 3, name: 'Laura', age: 25, city: 'Valencia', phone: '345-678-9012', email: 'laura@example.com', salary: 3500},
+            {id: 4, name: 'Rebeca', age: 25, city: 'Valencia', phone: '456-789-0123', email: 'rebeca@example.com', salary: 3200},
+            {id: 5, name: 'Fernanda', age: 20, city: 'Pachuca', phone: '567-890-1234', email: 'fernanda@example.com', salary: 2800}
         ];
 
         const config_default = {
@@ -180,6 +180,9 @@
                     {label: 'Nombre', field: 'name', type : 'text'},
                     {label: 'Edad', field: 'age', type: 'number', min: 1, max: 120},
                     {label: 'Ciudad', field: 'city', type: 'text'},
+                    {label: 'Telefono', field: 'phone', type: 'phone'},
+                    {label: 'Email', field: 'email', type: 'email'},
+                    {label: 'Sueldo', field: 'salary', type: 'money', min: 0},
                     {label: '*', field: 'actions', type: 'button', buttons: ["add", "edit", "delete", "save", "gedit"]}
                 ],
                 footer: {

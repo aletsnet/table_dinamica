@@ -254,6 +254,30 @@ const trebeca = (config, data) => {
                 }
             }
 
+            const format_phone = (phone) => {
+                const numbers = phone.replace(/\D/g, '');
+                if (numbers.length === 10) {
+                    return numbers.replace(/(\d{2})(\d{4})(\d{4})/, '$1 $2 $3');
+                }
+                return phone;
+            }
+
+            const format_email = (email) => {
+                //const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                //return emailPattern.test(email) ? email : 'Email inválido';
+                return email.toLowerCase();
+            }
+
+            const format_money = (amount) => {
+                const number = parseFloat(amount);
+                return isNaN(number) ? amount : number.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+            }
+
+            const updateTotalCount = () => {
+                const totalCount = document.getElementById('totalCount');
+                totalCount.textContent = tableBody.rows.length;
+            }
+
             //const tmp = tableHead.innerHTML;
             if(typeof config.table.cols === "object"){
                 //head
@@ -295,6 +319,7 @@ const trebeca = (config, data) => {
                         for (const key in columns) {
                             const col = columns[key];
                             const td = document.createElement('td');
+                            td.dataset.type = col.type;
                             switch (col.type) {
                                 case 'text':
                                     td.textContent = row[col.field] || "";
@@ -303,6 +328,21 @@ const trebeca = (config, data) => {
                                     break;
                                 case 'number':
                                     td.textContent = row[col.field] || "0";
+                                    td.dataset.id = row.id || '';
+                                    td.dataset.field = col.field;
+                                    break;
+                                case 'phone':
+                                    td.textContent = format_phone(row[col.field]) || "";
+                                    td.dataset.id = row.id || '';
+                                    td.dataset.field = col.field;
+                                    break;
+                                case 'email':
+                                    td.textContent = format_email(row[col.field]) || "";
+                                    td.dataset.id = row.id || '';
+                                    td.dataset.field = col.field;
+                                    break;
+                                case 'money':
+                                    td.textContent = format_money(row[col.field]) || "";
                                     td.dataset.id = row.id || '';
                                     td.dataset.field = col.field;
                                     break;
@@ -351,7 +391,7 @@ const trebeca = (config, data) => {
                                     }
                                     break;
                                 default:
-                                    td.textContent = "";
+                                    td.textContent = row[col.field];
                             }
                             newRow.appendChild(td);
                         }
@@ -365,8 +405,5 @@ const trebeca = (config, data) => {
             
 
 
-            function updateTotalCount() {
-                const totalCount = document.getElementById('totalCount');
-                totalCount.textContent = tableBody.rows.length;
-            }
+            
         }
