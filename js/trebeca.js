@@ -3,6 +3,113 @@ const trebeca = (config, data) => {
             const tableHead = table_rebeca.querySelector('thead');
             const tableBody = table_rebeca.querySelector('tbody');
             const tableFoot = table_rebeca.querySelector('tfoot');
+            let data_show = data;
+
+            const search_data = (search) => {
+                if(typeof config.search === "object"){
+                    const fields = config.search.fields || [];
+                    if(typeof data === "object" && Array.isArray(data)){
+                        data_show = data.filter(item => {
+                            return fields.some(field => {
+                                return item[field] && item[field].toString().toLowerCase().includes(search.toLowerCase());
+                            });
+                        });
+
+                        show_data();
+                        totalCount();
+                    }
+                }
+            }
+
+            const show_data = () => {
+                if(typeof data_show === "object" && Array.isArray(data_show)){
+                    tableBody.innerHTML = "";
+                    for(let row of data_show){
+                        const newRow = document.createElement('tr');
+                        const columns = config.table.cols;
+                        for (const key in columns) {
+                            const col = columns[key];
+                            const td = document.createElement('td');
+                            td.dataset.type = col.type;
+                            switch (col.type) {
+                                case 'text':
+                                    td.textContent = row[col.field] || "";
+                                    td.dataset.id = row.id || '';
+                                    td.dataset.field = col.field;
+                                    break;
+                                case 'number':
+                                    td.textContent = row[col.field] || "0";
+                                    td.dataset.id = row.id || '';
+                                    td.dataset.field = col.field;
+                                    break;
+                                case 'phone':
+                                    td.textContent = format_phone(row[col.field]) || "";
+                                    td.dataset.id = row.id || '';
+                                    td.dataset.field = col.field;
+                                    break;
+                                case 'email':
+                                    td.textContent = format_email(row[col.field]) || "";
+                                    td.dataset.id = row.id || '';
+                                    td.dataset.field = col.field;
+                                    break;
+                                case 'money':
+                                    td.textContent = format_money(row[col.field]) || "";
+                                    td.dataset.id = row.id || '';
+                                    td.dataset.field = col.field;
+                                    break;
+                                case 'button':
+                                    td.dataset.buttons = true;
+                                    if (col.buttons.includes("edit")) {
+                                        const button = document.createElement('button');
+                                        button.type = 'button';
+                                        button.dataset.type = "edit";
+                                        button.className = 'btn btn-warning btn-sm me-1 edit-btn';
+                                        button.innerHTML = '<i class="fas fa-edit"></i>';
+                                        //button.style = "display: none;";
+                                        button.addEventListener('click', (event) => { edit_item(event); });
+                                        td.appendChild(button);
+                                    }
+
+                                    if (col.buttons.includes("delete")) {
+                                        const button = document.createElement('button');
+                                        button.type = 'button';
+                                        button.dataset.type = "delete";
+                                        button.className = 'btn btn-danger btn-sm delete-btn';
+                                        button.innerHTML = '<i class="fas fa-trash"></i>';
+                                        //button.style = "display: none;";
+                                        button.addEventListener('click', (event) => { remove_item(event); });
+                                        td.appendChild(button);
+                                    }
+
+                                    if(col.buttons.includes("save")) {
+                                        const button = document.createElement('button');
+                                        button.type = 'button';
+                                        button.dataset.type = "save";
+                                        button.className = 'btn btn-success btn-sm me-1 save-btn';
+                                        button.innerHTML = '<i class="fas fa-save"></i>';
+                                        button.style = "display: none;";
+                                        button.addEventListener('click', (event) => { save_item(event); });
+                                        td.appendChild(button);
+
+                                        const button_cancel = document.createElement('button');
+                                        button_cancel.type = 'button';
+                                        button_cancel.dataset.type = "cancel";
+                                        button_cancel.className = 'btn btn-secondary btn-sm cancel-btn';
+                                        button_cancel.innerHTML = '<i class="fas fa-times"></i>';
+                                        button_cancel.style = "display: none;";
+                                        button_cancel.addEventListener('click', (event) => { cancel_item(event); });
+                                        td.appendChild(button_cancel);
+                                    }
+                                    break;
+                                default:
+                                    td.textContent = row[col.field];
+                            }
+                            newRow.appendChild(td);
+                        }
+                        tableBody.appendChild(newRow);
+                    }
+                }
+            }
 
             const add_item = () => {
                 const newRow = document.createElement('tr');
@@ -117,7 +224,6 @@ const trebeca = (config, data) => {
                     if(typeof td.dataset === "object" && typeof td.dataset.buttons === "string"){
                         const buttons = td.querySelectorAll('button');
                         buttons.forEach(button => {
-                            console.log(`Button type: ${button.dataset.type}`);
                             if(typeof button.dataset === "object" && typeof button.dataset.type === "string"){
                                 switch (button.dataset.type) {
                                     case 'edit':
@@ -273,15 +379,53 @@ const trebeca = (config, data) => {
                 return isNaN(number) ? amount : number.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
             }
 
-            const updateTotalCount = () => {
-                const totalCount = document.getElementById('totalCount');
-                totalCount.textContent = tableBody.rows.length;
+            const totalCount = () => {
+                tableFoot.innerHTML = "";
+                let c = data_show.length || 0;
+                const tr = document.createElement('tr');
+                const th = document.createElement('th');
+                th.colSpan = config.table.cols.length ;
+                const span = document.createElement('span');
+                th.className = 'text-end';
+                span.innerHTML = `Total: <span>${c}</span>`;
+                th.appendChild(span);
+                tr.appendChild(th);
+                tableFoot.appendChild(tr);
             }
 
-            //const tmp = tableHead.innerHTML;
             if(typeof config.table.cols === "object"){
                 //head
                 tableHead.innerHTML = "";
+                if(typeof config.search === "object"){
+                    const searchInput = document.createElement('input');
+                    searchInput.type = 'text';
+                    searchInput.placeholder = 'Buscar...';
+                    searchInput.className = 'form-control';
+                    searchInput.value = config.search.value || '';
+                    searchInput.addEventListener('input', (event) => {
+                        const query = event.target.value.toLowerCase();
+                        search_data(query);
+                    });
+
+                    const tr = document.createElement('tr');
+                    const th = document.createElement('th');
+                    th.colSpan = config.table.cols.length -1;
+                    th.appendChild(searchInput);
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'btn btn-primary';
+                    button.innerHTML = '<i class="fas fa-search"></i>';
+                    button.addEventListener('click', () => {
+                        const query = searchInput.value.toLowerCase();
+                        search_data(query);
+                    });
+                    const th2 = document.createElement('th');
+                    th2.appendChild(button);
+                    tr.appendChild(th);
+                    tr.appendChild(th2);
+                    tableHead.appendChild(tr);
+                }
+                
                 if(typeof config.table === "object"){
                     const table = config.table;
                     if(typeof table.cols === "object"){
@@ -311,96 +455,10 @@ const trebeca = (config, data) => {
                 }
 
                 //body
-                if(typeof data === "object" && Array.isArray(data)){
-                    tableBody.innerHTML = "";
-                    for(let row of data){
-                        const newRow = document.createElement('tr');
-                        const columns = config.table.cols;
-                        for (const key in columns) {
-                            const col = columns[key];
-                            const td = document.createElement('td');
-                            td.dataset.type = col.type;
-                            switch (col.type) {
-                                case 'text':
-                                    td.textContent = row[col.field] || "";
-                                    td.dataset.id = row.id || '';
-                                    td.dataset.field = col.field;
-                                    break;
-                                case 'number':
-                                    td.textContent = row[col.field] || "0";
-                                    td.dataset.id = row.id || '';
-                                    td.dataset.field = col.field;
-                                    break;
-                                case 'phone':
-                                    td.textContent = format_phone(row[col.field]) || "";
-                                    td.dataset.id = row.id || '';
-                                    td.dataset.field = col.field;
-                                    break;
-                                case 'email':
-                                    td.textContent = format_email(row[col.field]) || "";
-                                    td.dataset.id = row.id || '';
-                                    td.dataset.field = col.field;
-                                    break;
-                                case 'money':
-                                    td.textContent = format_money(row[col.field]) || "";
-                                    td.dataset.id = row.id || '';
-                                    td.dataset.field = col.field;
-                                    break;
-                                case 'button':
-                                    td.dataset.buttons = true;
-                                    if (col.buttons.includes("edit")) {
-                                        const button = document.createElement('button');
-                                        button.type = 'button';
-                                        button.dataset.type = "edit";
-                                        button.className = 'btn btn-warning btn-sm me-1 edit-btn';
-                                        button.innerHTML = '<i class="fas fa-edit"></i>';
-                                        //button.style = "display: none;";
-                                        button.addEventListener('click', (event) => { edit_item(event); });
-                                        td.appendChild(button);
-                                    }
-
-                                    if (col.buttons.includes("delete")) {
-                                        const button = document.createElement('button');
-                                        button.type = 'button';
-                                        button.dataset.type = "delete";
-                                        button.className = 'btn btn-danger btn-sm delete-btn';
-                                        button.innerHTML = '<i class="fas fa-trash"></i>';
-                                        //button.style = "display: none;";
-                                        button.addEventListener('click', (event) => { remove_item(event); });
-                                        td.appendChild(button);
-                                    }
-
-                                    if(col.buttons.includes("save")) {
-                                        const button = document.createElement('button');
-                                        button.type = 'button';
-                                        button.dataset.type = "save";
-                                        button.className = 'btn btn-success btn-sm me-1 save-btn';
-                                        button.innerHTML = '<i class="fas fa-save"></i>';
-                                        button.style = "display: none;";
-                                        button.addEventListener('click', (event) => { save_item(event); });
-                                        td.appendChild(button);
-
-                                        const button_cancel = document.createElement('button');
-                                        button_cancel.type = 'button';
-                                        button_cancel.dataset.type = "cancel";
-                                        button_cancel.className = 'btn btn-secondary btn-sm cancel-btn';
-                                        button_cancel.innerHTML = '<i class="fas fa-times"></i>';
-                                        button_cancel.style = "display: none;";
-                                        button_cancel.addEventListener('click', (event) => { cancel_item(event); });
-                                        td.appendChild(button_cancel);
-                                    }
-                                    break;
-                                default:
-                                    td.textContent = row[col.field];
-                            }
-                            newRow.appendChild(td);
-                        }
-                        tableBody.appendChild(newRow);
-                    }
-                }
+                show_data();
 
                 //foot
-                updateTotalCount();
+                totalCount();
             }
             
 

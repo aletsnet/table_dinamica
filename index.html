@@ -167,16 +167,33 @@
     <script>
         // trebeca.js
         const data = [
-            {id: 1, name: 'Ana', age: 28, city: 'Madrid', phone: '123-456-7890', email: 'ana@example.com', salary: 3000},
-            {id: 2, name: 'Juana', age: 34, city: 'Barcelona', phone: '234-567-8901', email: 'juana@example.com', salary: 4000},
-            {id: 3, name: 'Laura', age: 25, city: 'Valencia', phone: '345-678-9012', email: 'laura@example.com', salary: 3500},
-            {id: 4, name: 'Rebeca', age: 25, city: 'Valencia', phone: '456-789-0123', email: 'rebeca@example.com', salary: 3200},
-            {id: 5, name: 'Fernanda', age: 20, city: 'Pachuca', phone: '567-890-1234', email: 'fernanda@example.com', salary: 2800}
+            {id: 1, name: 'Ana', age: 28, city: 'Madrid', phone: '1234567890', email: 'ana@example.com', salary: 13000},
+            {id: 2, name: 'Juana', age: 34, city: 'Barcelona', phone: '2345678901', email: 'juana@example.com', salary: 24000},
+            {id: 3, name: 'Laura', age: 25, city: 'Valencia', phone: '3456789012', email: 'laura@example.com', salary: 13500},
+            {id: 4, name: 'Rebeca', age: 25, city: 'Valencia', phone: '4567890123', email: 'rebeca@example.com', salary: 23200},
+            {id: 5, name: 'Fernanda', age: 20, city: 'Pachuca', phone: '5678901234', email: 'fernanda@example.com', salary: 12800},
+            {id: 6, name: 'Carlos', age: 30, city: 'Monterrey', phone: '6789012345', email: 'carlos@example.com', salary: 14500},
+            {id: 7, name: 'Luis', age: 22, city: 'Guadalajara', phone: '7890123456', email: 'luis@example.com', salary: 12900},
+            {id: 8, name: 'Miguel', age: 27, city: 'Ciudad de México', phone: '8901234567', email: 'miguel@example.com', salary: 13100},
+            {id: 9, name: 'Sofia', age: 26, city: 'Puebla', phone: '9012345678', email: 'sofia@example.com', salary: 13300},
+            {id: 10, name: 'Diego', age: 29, city: 'Tijuana', phone: '0123456789', email: 'diego@example.com', salary: 23400},
+            {id: 11, name: 'Valeria', age: 24, city: 'Querétaro', phone: '1234567891', email: 'valeria@example.com', salary: 23600},
+            {id: 12, name: 'Andrés', age: 31, city: 'León', phone: '2345678902', email: 'andres@example.com', salary: 23700}
         ];
 
         const config_default = {
+            search: {
+                value: '',
+                fields: ['name', 'city', 'email','phone']
+            },
+            pagination: {
+                page: 1,
+                pageSize: 10,
+                total: data.length
+            },
             table: {
                 cols: [
+                    {label: 'ID', field: 'id', type: 'number', min: 1},
                     {label: 'Nombre', field: 'name', type : 'text'},
                     {label: 'Edad', field: 'age', type: 'number', min: 1, max: 120},
                     {label: 'Ciudad', field: 'city', type: 'text'},
