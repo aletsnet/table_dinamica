@@ -443,6 +443,41 @@ const trebeca = (config, data) => {
         tableFoot.appendChild(pagination);
     }
 
+    const paste = (event) => {
+        /*event.preventDefault();
+        const clipboardData = event.clipboardData || window.clipboardData;
+        const pastedData = clipboardData.getData('Text');
+
+        // Procesa la tabla pegada (asumiendo formato tabular: filas separadas por \n y columnas por \t)
+        const rows = pastedData.trim().split('\n');
+        const newData = rows.map((row, idx) => {
+            const cols = row.split('\t');
+            return {
+                id: data.length + idx + 1,
+                name: cols[0] || '',
+                age: Number(cols[1]) || '',
+                city: cols[2] || '',
+                phone: cols[3] || '',
+                email: cols[4] || '',
+                salary: Number(cols[5]) || ''
+            };
+        });
+
+        // Agrega los nuevos registros a la variable data
+        data.push(...newData);
+
+        // Opcional: recarga la tabla si tienes una función para ello
+        if (typeof trebeca === 'function') {
+            trebeca(config_default, data);
+        }
+
+        // Opcional: muestra alerta de éxito
+        if (typeof Swal !== 'undefined') {
+            Swal.fire('¡Tabla pegada!', 'Los datos se han añadido correctamente.', 'success');
+        }*/
+        
+    }
+
     if(typeof config.table.cols === "object"){
         //head
         tableHead.innerHTML = "";
@@ -510,8 +545,5 @@ const trebeca = (config, data) => {
         //foot
         totalCount();
     }
-    
-
-
     
 }
