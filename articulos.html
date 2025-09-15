@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto HTML + Bootstrap + JS</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Mi Proyecto</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#sobre">Sobre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contacto">Contacto</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero-section bg-light py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <h3>
+                        Mi tabla dinamica
+                    </h3>
+                    <table class="table table-striped trebeca" >
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Edad</th>
+                                <th>Ciudad</th>
+                                <th>
+                                    <button type="button" class="btn btn-success btn-sm me-1 btn-add-row">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ana</td>
+                                <td>28</td>
+                                <td>Madrid</td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm me-1 edit-btn">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Juan</td>
+                                <td>34</td>
+                                <td>Barcelona</td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm me-1 edit-btn">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Laura</td>
+                                <td>25</td>
+                                <td>Valencia</td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm me-1 edit-btn">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Total de registros:</td>
+                                <td class="fw-bold" id="totalCount">3</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    
+                    <!-- Modal para añadir/editar registro -->
+                    <div class="modal fade" id="personModal" tabindex="-1" aria-labelledby="personModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="personModalLabel">Añadir Persona</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="personForm">
+                                        <div class="mb-3">
+                                            <label for="personName" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" id="personName" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="personAge" class="form-label">Edad</label>
+                                            <input type="number" class="form-control" id="personAge" min="1" max="120" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="personCity" class="form-label">Ciudad</label>
+                                            <input type="text" class="form-control" id="personCity" required>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-primary" id="savePersonBtn">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2025 Mi Proyecto. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p>Desarrollado con ❤️ usando Bootstrap</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom JavaScript -->
+    <script src="js/trebeca.js"></script>
+    <script>
+        // trebeca.js
+        const data = [
+            {id: 1, nombre: 'Pan Blanco Bimbo Grande', precio: 45.0, cantidad: 5, unidad:"pieza", categoria: 'Panaderia'},
+            {id: 2, nombre: 'Leche Entera Santa Clara 1L', precio: 32, cantidad: 1, unidad:"litro", categoria: 'Lacteos'},
+            {id: 3, nombre: 'Huevos Bachoco', precio: 32, cantidad: 12, unidad:"pieza", categoria: 'Huevos'},
+            {id: 4, nombre: 'Queso Manchego 250g', precio: 41, cantidad: 1, unidad:"kg", categoria: 'Lacteos'},
+            {id: 5, nombre: 'Yogur Natural 24oz', precio: 25, cantidad: 24, unidad:"onza", categoria: 'Lacteos'},
+            {id: 6, nombre: 'Mantequilla 200g', precio: 2.20, cantidad: 1, unidad:"pieza", categoria: 'Lacteos'},
+            {id: 7, nombre: 'Jamón Cocido 200g', precio: 2.85, cantidad: 1, unidad:"pieza", categoria: 'Embutidos'},
+            {id: 8, nombre: 'Pan Integral Bimbo 500g', precio: 1.30, cantidad: 1, unidad:"pieza", categoria: 'Panaderia'},
+            {id: 9, nombre: 'Leche Condensada 397g', precio: 1.10, cantidad: 1, unidad:"pieza", categoria: 'Lacteos'},
+            {id: 10, nombre: 'Papas', precio: 0.80, cantidad: 1, unidad:"pieza", categoria: 'Verduras'},
+            {id: 11, nombre: 'Manzanas', precio: 1.50, cantidad: 1, unidad:"pieza", categoria: 'Frutas'},
+            {id: 12, nombre: 'Pollo Entero', precio: 5.00, cantidad: 1, unidad:"pieza", categoria: 'Carnes'},
+            {id: 13, nombre: 'Arroz 1kg', precio: 1.20, cantidad: 1, unidad:"pieza", categoria: 'Cereales'},
+            {id: 14, nombre: 'Pasta 500g', precio: 0.90, cantidad: 1, unidad:"pieza", categoria: 'Cereales'},
+            {id: 15, nombre: 'Aceite de Oliva 1L', precio: 4.50, cantidad: 1, unidad:"pieza", categoria: 'Aceites'},
+            {id: 16, nombre: 'Azúcar 1kg', precio: 1.10, cantidad: 1, unidad:"pieza", categoria: 'Dulces'},
+            
+        ];
+
+        const config_default = {
+            search: {
+                value: '',
+                fields: ['nombre', 'categoria']
+            },
+            table: {
+                cols: [
+                    {label: 'ID', field: 'id', type: 'number', min: 1},
+                    {label: 'Producto', field: 'nombre', type : 'text'},
+                    {label: 'Precio', field: 'precio', type: 'money'},
+                    {label: 'Unidad', field: 'unidad', type: 'text'},
+                    {label: 'Categoría', field: 'categoria', type: 'text'},
+                    {label: '*', field: 'actions', type: 'button', buttons: ["add", "edit", "delete", "save", "gedit"]}
+                ],
+                footer: {
+                    label: 'Total de registros:',
+                    field: 'count',
+                    type: 'text'
+                }
+            },
+            tableClass: 'trebeca',
+            // Usando referencias a funciones (más seguro que eval)
+            add: (event) => {btn_add(event)},
+            edit: (event) => {btn_edit(event)},
+            delete: (event) => {btn_delete(event)},   
+            save: (event) => {btn_save(event)},
+        };
+
+        const btn_add = () => {
+            console.log("Agregar nuevo registro");
+        }
+        
+        const btn_edit = (event) => {
+            const id = event.target.id;
+            console.log("Editar registro id:", id);
+            
+        }
+
+        const btn_delete = (event) => {
+            const id = event.target.id;
+            console.log("Eliminar registro id:", id);
+        }
+
+        const btn_save = (event) => {
+            const id = event.target.id;
+            console.log("Guardar registro id:", id);
+        }
+
+        document.addEventListener('DOMContentLoaded', trebeca(config_default, data));
+
+        
+    </script>
+</body>
+</html>

@@ -6,6 +6,20 @@ const trebeca = (config, data) => {
     let data_show = data;
     let page_show = 0;
 
+    const create_input = (td) => {
+        if(typeof td.dataset === "object" && typeof td.dataset.type === "string" && td.dataset.type !== "button"){
+            const input = document.createElement('input');
+            input.type = td.dataset.type || 'text';
+            input.value = td.textContent || '';
+            input.className = 'form-control form-control-sm';
+            input.dataset.id = td.dataset.id || '';
+            input.dataset.field = td.dataset.field || '';
+            td.innerHTML = '';
+            td.appendChild(input);
+            td.classList.add('td_editable');
+        }
+    }
+
     const search_data = (search) => {
         if(typeof config.search === "object"){
             const fields = config.search.fields || [];
@@ -31,9 +45,15 @@ const trebeca = (config, data) => {
                 const end = start + limit;
                 data_show = data_show.slice(start, end);
             }
+            const columns = config.table.cols;
+            const action = columns.filter(col => col.field === 'actions')[0];
+            const actions = action.buttons.reduce((acc, btn) => {acc[btn] = true; return acc;}, {});
+
             for(let row of data_show){
                 const newRow = document.createElement('tr');
-                const columns = config.table.cols;
+                if(typeof actions.edit !== "undefined"){
+                    newRow.addEventListener('dblclick', (event) => { edit_item(event); });
+                }
                 for (const key in columns) {
                     const col = columns[key];
                     const td = document.createElement('td');
@@ -133,7 +153,7 @@ const trebeca = (config, data) => {
             if (data_show.length === 0) {
                 const noDataRow = document.createElement('tr');
                 const noDataCell = document.createElement('td');
-                noDataCell.colSpan = columns.length;
+                noDataCell.colSpan = config.table.cols.length;
                 noDataCell.textContent = 'No hay datos disponibles';
                 noDataRow.appendChild(noDataCell);
                 tableBody.appendChild(noDataRow);
@@ -149,74 +169,59 @@ const trebeca = (config, data) => {
         for (const key in columns) {
             const col = columns[key];
             const td = document.createElement('td');
-            switch (col.type) {
-                case 'text':
-                    td.textContent = "";
-                    td.dataset.id = '';
-                    td.dataset.field = col.field;
-                    td.contentEditable = 'true';
-                    td.classList.add('td_editable');
-                    // Guardar referencia al primer elemento editable
-                    if(first_field === ""){
-                        first_field = col.field;
-                        firstEditableElement = td;
-                    }
-                    break;
-                case 'number':
-                    td.textContent = "0";
-                    td.dataset.id = '';
-                    td.dataset.field = col.field;
-                    td.contentEditable = 'true';
-                    td.classList.add('td_editable');
-                    break;
-                case 'button':
-                    td.dataset.buttons = true;
-                    if (col.buttons.includes("edit")) {
-                        const button = document.createElement('button');
-                        button.type = 'button';
-                        button.dataset.type = "edit";
-                        button.className = 'btn btn-warning btn-sm me-1 edit-btn';
-                        button.innerHTML = '<i class="fas fa-edit"></i>';
-                        button.style = "display: none;";
-                        button.addEventListener('click', (event) => { edit_item(event); });
-                        td.appendChild(button);
-                    }
+            td.dataset.type = col.type;
+            if(col.type === 'button'){
+                td.dataset.buttons = true;
+                if (col.buttons.includes("edit")) {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.dataset.type = "edit";
+                    button.className = 'btn btn-warning btn-sm me-1 edit-btn';
+                    button.innerHTML = '<i class="fas fa-edit"></i>';
+                    button.style = "display: none;";
+                    button.addEventListener('click', (event) => { edit_item(event); });
+                    td.appendChild(button);
+                }
 
-                    if (col.buttons.includes("delete")) {
-                        const button = document.createElement('button');
-                        button.type = 'button';
-                        button.dataset.type = "delete";
-                        button.className = 'btn btn-danger btn-sm delete-btn';
-                        button.innerHTML = '<i class="fas fa-trash"></i>';
-                        button.style = "display: none;";
-                        button.addEventListener('click', (event) => { remove_item(event); });
-                        td.appendChild(button);
-                    }
+                if (col.buttons.includes("delete")) {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.dataset.type = "delete";
+                    button.className = 'btn btn-danger btn-sm delete-btn';
+                    button.innerHTML = '<i class="fas fa-trash"></i>';
+                    button.style = "display: none;";
+                    button.addEventListener('click', (event) => { remove_item(event); });
+                    td.appendChild(button);
+                }
 
-                    if(col.buttons.includes("save")) {
-                        const button = document.createElement('button');
-                        button.type = 'button';
-                        button.dataset.type = "save";
-                        button.className = 'btn btn-success btn-sm me-1 save-btn';
-                        button.innerHTML = '<i class="fas fa-save"></i>';
-                        //button.style = "display: normal;";
-                        button.addEventListener('click', (event) => { save_item(event); });
-                        td.appendChild(button);
+                if(col.buttons.includes("save")) {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.dataset.type = "save";
+                    button.className = 'btn btn-success btn-sm me-1 save-btn';
+                    button.innerHTML = '<i class="fas fa-save"></i>';
+                    //button.style = "display: normal;";
+                    button.addEventListener('click', (event) => { save_item(event); });
+                    td.appendChild(button);
 
-                        const button_cancel = document.createElement('button');
-                        button_cancel.type = 'button';
-                        button_cancel.dataset.type = "cancel";
-                        button_cancel.className = 'btn btn-secondary btn-sm cancel-btn';
-                        button_cancel.innerHTML = '<i class="fas fa-times"></i>';
-                        //button_cancel.style = "display: none;";
-                        button_cancel.addEventListener('click', (event) => { cancel_item(event); });
-                        td.appendChild(button_cancel);
-                    }
-                    break;
-                default:
-                    td.textContent = "";
+                    const button_cancel = document.createElement('button');
+                    button_cancel.type = 'button';
+                    button_cancel.dataset.type = "cancel";
+                    button_cancel.className = 'btn btn-secondary btn-sm cancel-btn';
+                    button_cancel.innerHTML = '<i class="fas fa-times"></i>';
+                    //button_cancel.style = "display: none;";
+                    button_cancel.addEventListener('click', (event) => { cancel_item(event); });
+                    td.appendChild(button_cancel);
+                }
+            }else{
+                td.dataset.id = "";
+                td.dataset.field = col.field;
+                create_input(td);
             }
+
             newRow.appendChild(td);
+
+            
         }
         tableBody.insertBefore(newRow, tableBody.firstChild);
         
@@ -239,7 +244,6 @@ const trebeca = (config, data) => {
         for (const key in tr_row.children) {
             const td = tr_row.children[key];
             if(typeof td === "object" && td.nodeName === "TD"){
-                td.contentEditable = 'false';
                 td.classList.remove('td_editable');
             }
             if(typeof td.dataset === "object"){
@@ -280,16 +284,56 @@ const trebeca = (config, data) => {
     }
 
     const remove_item = (event) => {
-        if(!confirm("Está seguro de eliminar este elemento?")){
-            return;
+        if (typeof Swal !== 'undefined') {
+            Swal.fire(
+                {
+                    title: '¿Estás seguro de eliminar este registro?',
+                    text: "Esta acción no se puede deshacer.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }
+            ).then((result) => {
+                if (result.isConfirmed) {
+                    console.log(data_show);
+                    
+                    const td_bts = event.target.closest('td');
+                    const tr_row = td_bts.closest('tr');
+                    for (const td of tr_row.children) {
+                        if (td.nodeName === "TD") {
+                            if(td.dataset.field == "id"){
+                                console.log(`Eliminar ID: ${td.dataset.id}`);
+
+                                data_show = data_show.filter(i => { console.log(i.id, td.dataset.id);
+                                 return i.id !== td.dataset.id });
+                                break;
+                            }
+                        }
+                    }
+                    //show_data();
+                    //totalCount();
+                    //tr_row.remove();
+
+                    if(typeof config.delete === "function"){
+                        config.delete(event);
+                    }
+                }
+            });
+        }else{
+            if(confirm("¿Estás seguro de eliminar este registro?")){
+                const td_bts = event.target.closest('td');
+                const tr_row = td_bts.closest('tr');
+                console.log(tr_row);
+                
+                //tr_row.remove();
+                if(typeof config.delete === "function"){
+                    config.delete(event);
+                }
+            }
         }
-        const td_bts = event.target.closest('td');
-        const tr_row = td_bts.closest('tr');
-        tr_row.remove();
-        if(typeof config.delete === "function"){
-            config.delete(event);
-        }
-        updateTotalCount();
     }
 
     const edit_item = (event) => {
@@ -301,9 +345,13 @@ const trebeca = (config, data) => {
         for (const key in tr_row.children) {
             const td = tr_row.children[key];
             if(typeof td === "object" && td.nodeName === "TD"){
-                td.contentEditable = 'true';
-                td.classList.add('td_editable');
-                //td.classList.add('form-control');
+                console.log(td.dataset);
+                if(td.className === "td_editable"){
+                    continue;
+                }
+
+                create_input(td);
+
                 if(first_field === ""){
                     first_field = td.dataset.field || "";
                     firstEditableElement = td;
@@ -354,7 +402,6 @@ const trebeca = (config, data) => {
         for (const key in tr_row.children) {
             const td = tr_row.children[key];
             if(typeof td === "object" && td.nodeName === "TD"){
-                td.contentEditable = 'false';
                 td.classList.remove('td_editable');
             }
 
