@@ -5,6 +5,7 @@ const trebeca = (config, data) => {
     const tableFoot = table_rebeca.querySelector('tfoot');
     let data_show = data;
     let page_show = 0;
+    let count_row = 0;
 
     const create_input = (td) => {
         if(typeof td.dataset === "object" && typeof td.dataset.type === "string" && td.dataset.type !== "button"){
@@ -12,9 +13,12 @@ const trebeca = (config, data) => {
             input.type = td.dataset.type || 'text';
             input.value = td.textContent || '';
             input.className = 'form-control form-control-sm';
-            input.dataset.id = td.dataset.id || '';
+            input.dataset.id = td.dataset.id || Date.now().toString();
             input.dataset.field = td.dataset.field || '';
             td.innerHTML = '';
+            if(td.dataset.field === "id" && input.value === ""){
+                input.value = Date.now().toString();
+            }
             td.appendChild(input);
             td.classList.add('td_editable');
         }
@@ -24,9 +28,13 @@ const trebeca = (config, data) => {
         if(typeof config.search === "object"){
             const fields = config.search.fields || [];
             if(typeof data === "object" && Array.isArray(data)){
+                const removeAccents = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
                 data_show = data.filter(item => {
                     return fields.some(field => {
-                        return item[field] && item[field].toString().toLowerCase().includes(search.toLowerCase());
+                        const value = item[field] ? removeAccents(item[field].toString().toLowerCase()) : "";
+                        const searchNorm = removeAccents(search.toLowerCase());
+                        return value.includes(searchNorm);
                     });
                 });
 
@@ -51,6 +59,7 @@ const trebeca = (config, data) => {
 
             for(let row of data_show){
                 const newRow = document.createElement('tr');
+                newRow.dataset.id = row.id || '';
                 if(typeof actions.edit !== "undefined"){
                     newRow.addEventListener('dblclick', (event) => { edit_item(event); });
                 }
@@ -163,6 +172,7 @@ const trebeca = (config, data) => {
 
     const add_item = () => {
         const newRow = document.createElement('tr');
+        newRow.dataset.id = "_new";
         const columns = config.table.cols;
         let first_field = "";
         let firstEditableElement = null;
@@ -214,7 +224,7 @@ const trebeca = (config, data) => {
                     td.appendChild(button_cancel);
                 }
             }else{
-                td.dataset.id = "";
+                td.dataset.id = "_new";
                 td.dataset.field = col.field;
                 create_input(td);
             }
@@ -241,46 +251,52 @@ const trebeca = (config, data) => {
     const save_item = (event) => {
         const td_bts = event.target.closest('td');
         const tr_row = td_bts.closest('tr');
-        for (const key in tr_row.children) {
-            const td = tr_row.children[key];
-            if(typeof td === "object" && td.nodeName === "TD"){
-                td.classList.remove('td_editable');
-            }
-            if(typeof td.dataset === "object"){
-                if(typeof td.dataset.field === "string"){
-                    console.log(`${td.dataset.field}: ${td.textContent}`);
+        const columns = config.table.cols;
+        console.log(tr_row.dataset, columns);
+        if(tr_row.dataset.id === "_new"){
+            const newItem = {};
+            for (const key in columns) {
+                const col = columns[key];
+                if(col.type !== "button"){
+                    newItem[col.field] = "";
                 }
             }
-            if(typeof td === "object" && td.nodeName === "TD"){
-                td.contentEditable = 'false';
+            newItem.id = Date.now().toString(); // Genera un ID único basado en la marca de tiempo
+            tr_row.dataset.id = newItem.id;
+            for (const td of tr_row.children) {
+                if (td.nodeName === "TD" && td.dataset.type !== "button") {
+                    const input = td.querySelector('input');
+                    if (input) {
+                        newItem[td.dataset.field] = input.value;
+                        td.textContent = input.value;
+                        td.classList.remove('td_editable');
+                    }
+                }
             }
-
-            if(typeof td.dataset === "object" && typeof td.dataset.buttons === "string"){
-                const buttons = td.querySelectorAll('button');
-                buttons.forEach(button => {
-                    if(typeof button.dataset === "object" && typeof button.dataset.type === "string"){
-                        switch (button.dataset.type) {
-                            case 'edit':
-                                button.style = '';
-                                break;
-                            case 'delete':
-                                button.style = '';
-                                break;
-                            case 'save':
-                                button.style.display = 'none';
-                                break;
-                            default:
-                                button.style.display = 'none';
-                                break;
+            data_show.push(newItem);
+        }else{
+            let data_show_item = data_show.filter(item => { return item.id === tr_row.dataset.id; })[0] || {};
+            if(typeof data_show.id !== "undefined"){
+                for (const td of tr_row.children) {
+                    if (td.nodeName === "TD" && td.dataset.type !== "button") {
+                        const input = td.querySelector('input');
+                        if (input) {
+                            data_show_item[td.dataset.field] = input.value;
+                            td.textContent = input.value;
+                            td.classList.remove('td_editable');
                         }
                     }
-                });
+                }
             }
         }
+        
+        
 
         if(typeof config.save === "function"){
             config.save(event);
         }
+        show_data();
+        totalCount();
     }
 
     const remove_item = (event) => {
@@ -405,6 +421,14 @@ const trebeca = (config, data) => {
                 td.classList.remove('td_editable');
             }
 
+            if (td.nodeName === "TD" && td.dataset.type !== "button") {
+                const input = td.querySelector('input');
+                if (input) {
+                    td.textContent = input.value;
+                    td.classList.remove('td_editable');
+                }
+            }
+
             if(typeof td.dataset === "object" && typeof td.dataset.buttons === "string"){
                 const buttons = td.querySelectorAll('button');
                 buttons.forEach(button => {
@@ -459,6 +483,7 @@ const trebeca = (config, data) => {
     const totalCount = () => {
         tableFoot.innerHTML = "";
         let c = data_show.length || 0;
+        count_row = c;
         const tr = document.createElement('tr');
         const th = document.createElement('th');
         th.colSpan = config.table.cols.length ;
