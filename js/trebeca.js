@@ -67,29 +67,57 @@ const trebeca = (config, data) => {
                     const col = columns[key];
                     const td = document.createElement('td');
                     td.dataset.type = col.type;
+                    let value = row[col.field] || '';
+                    if(typeof value === "object" && Array.isArray(value)){
+                        let acum = null;
+                        switch (col.operator) {
+                            case 'rest':
+                                acum = 0;
+                                for (const v of value) { acum -= row[v] || 0;}
+                                value = acum;
+                                break;
+                            case 'sum':
+                                acum = 0;
+                                for (const v of value) { acum += row[v] || 0;}
+                                value = acum;
+                                break;
+                            case 'multiply':
+                                acum = 1;
+                                for (const v of value) { acum *= row[v] || 1;}
+                                value = acum;
+                                break;
+                            case 'concat':
+                                value = value.join(', ');
+                                break;
+                            default:
+                                value = value.join(' ');
+                                break;
+                        }
+                        
+                    }
                     switch (col.type) {
                         case 'text':
-                            td.textContent = row[col.field] || "";
+                            td.textContent = value;
                             td.dataset.id = row.id || '';
                             td.dataset.field = col.field;
                             break;
                         case 'number':
-                            td.textContent = row[col.field] || "0";
+                            td.textContent = value || "0";
                             td.dataset.id = row.id || '';
                             td.dataset.field = col.field;
                             break;
                         case 'phone':
-                            td.textContent = format_phone(row[col.field]) || "";
+                            td.textContent = format_phone(value) || "";
                             td.dataset.id = row.id || '';
                             td.dataset.field = col.field;
                             break;
                         case 'email':
-                            td.textContent = format_email(row[col.field]) || "";
+                            td.textContent = format_email(value) || "";
                             td.dataset.id = row.id || '';
                             td.dataset.field = col.field;
                             break;
                         case 'money':
-                            td.textContent = format_money(row[col.field]) || "";
+                            td.textContent = format_money(value) || "";
                             td.dataset.id = row.id || '';
                             td.dataset.field = col.field;
                             break;
@@ -226,7 +254,9 @@ const trebeca = (config, data) => {
             }else{
                 td.dataset.id = "_new";
                 td.dataset.field = col.field;
-                create_input(td);
+                if(typeof col.add === "undefined" && col.add !== false){
+                    create_input(td);
+                }
             }
 
             newRow.appendChild(td);
@@ -244,7 +274,7 @@ const trebeca = (config, data) => {
         
         if(typeof config.add === "function"){
             config.add();
-            console.log("Add action executed");
+            //console.log("Add action executed");
         }
     }
 
@@ -252,7 +282,7 @@ const trebeca = (config, data) => {
         const td_bts = event.target.closest('td');
         const tr_row = td_bts.closest('tr');
         const columns = config.table.cols;
-        console.log(tr_row.dataset, columns);
+        
         if(tr_row.dataset.id === "_new"){
             const newItem = {};
             for (const key in columns) {
@@ -275,8 +305,9 @@ const trebeca = (config, data) => {
             }
             data_show.push(newItem);
         }else{
-            let data_show_item = data_show.filter(item => { return item.id === tr_row.dataset.id; })[0] || {};
-            if(typeof data_show.id !== "undefined"){
+            let id_ = tr_row.dataset.id;
+            let data_show_item = data_show.find(item => { return item.id == id_; });
+            if(typeof data_show_item.id !== "undefined"){
                 for (const td of tr_row.children) {
                     if (td.nodeName === "TD" && td.dataset.type !== "button") {
                         const input = td.querySelector('input');
@@ -314,8 +345,6 @@ const trebeca = (config, data) => {
                 }
             ).then((result) => {
                 if (result.isConfirmed) {
-                    console.log(data_show);
-                    
                     const td_bts = event.target.closest('td');
                     const tr_row = td_bts.closest('tr');
                     for (const td of tr_row.children) {
@@ -329,9 +358,6 @@ const trebeca = (config, data) => {
                             }
                         }
                     }
-                    //show_data();
-                    //totalCount();
-                    //tr_row.remove();
 
                     if(typeof config.delete === "function"){
                         config.delete(event);
@@ -342,9 +368,6 @@ const trebeca = (config, data) => {
             if(confirm("¿Estás seguro de eliminar este registro?")){
                 const td_bts = event.target.closest('td');
                 const tr_row = td_bts.closest('tr');
-                console.log(tr_row);
-                
-                //tr_row.remove();
                 if(typeof config.delete === "function"){
                     config.delete(event);
                 }
@@ -355,18 +378,22 @@ const trebeca = (config, data) => {
     const edit_item = (event) => {
         const td_bts = event.target.closest('td');
         const tr_row = td_bts.closest('tr');
+        const columns = config.table.cols;
         let first_field = "";
         let firstEditableElement = null;
 
         for (const key in tr_row.children) {
             const td = tr_row.children[key];
+            const col = columns[key];
             if(typeof td === "object" && td.nodeName === "TD"){
-                console.log(td.dataset);
+                //console.log(td.dataset);
                 if(td.className === "td_editable"){
                     continue;
                 }
 
-                create_input(td);
+                if(typeof col.edit === "undefined" && col.edit !== false){
+                    create_input(td);
+                }
 
                 if(first_field === ""){
                     first_field = td.dataset.field || "";

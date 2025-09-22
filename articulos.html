@@ -167,23 +167,23 @@
     <script>
         // trebeca.js
         const data = [
-            {id: 1, nombre: 'Pan Blanco Bimbo Grande', precio: 45.0, cantidad: 5, unidad:"pieza", categoria: 'Panaderia'},
-            {id: 2, nombre: 'Leche Entera Santa Clara 1L', precio: 32, cantidad: 1, unidad:"litro", categoria: 'Lacteos'},
-            {id: 3, nombre: 'Huevos Bachoco', precio: 32, cantidad: 12, unidad:"pieza", categoria: 'Huevos'},
-            {id: 4, nombre: 'Queso Manchego 250g', precio: 41, cantidad: 1, unidad:"kg", categoria: 'Lacteos'},
-            {id: 5, nombre: 'Yogur Natural 24oz', precio: 25, cantidad: 24, unidad:"onza", categoria: 'Lacteos'},
-            {id: 6, nombre: 'Mantequilla 200g', precio: 2.20, cantidad: 1, unidad:"pieza", categoria: 'Lacteos'},
-            {id: 7, nombre: 'Jamón Cocido 200g', precio: 2.85, cantidad: 1, unidad:"pieza", categoria: 'Embutidos'},
-            {id: 8, nombre: 'Pan Integral Bimbo 500g', precio: 1.30, cantidad: 1, unidad:"pieza", categoria: 'Panaderia'},
-            {id: 9, nombre: 'Leche Condensada 397g', precio: 1.10, cantidad: 1, unidad:"pieza", categoria: 'Lacteos'},
-            {id: 10, nombre: 'Papas', precio: 0.80, cantidad: 1, unidad:"pieza", categoria: 'Verduras'},
-            {id: 11, nombre: 'Manzanas', precio: 1.50, cantidad: 1, unidad:"pieza", categoria: 'Frutas'},
-            {id: 12, nombre: 'Pollo Entero', precio: 5.00, cantidad: 1, unidad:"pieza", categoria: 'Carnes'},
-            {id: 13, nombre: 'Arroz 1kg', precio: 1.20, cantidad: 1, unidad:"pieza", categoria: 'Cereales'},
-            {id: 14, nombre: 'Pasta 500g', precio: 0.90, cantidad: 1, unidad:"pieza", categoria: 'Cereales'},
-            {id: 15, nombre: 'Aceite de Oliva 1L', precio: 4.50, cantidad: 1, unidad:"pieza", categoria: 'Aceites'},
-            {id: 16, nombre: 'Azúcar 1kg', precio: 1.10, cantidad: 1, unidad:"pieza", categoria: 'Dulces'},
-            
+            {id: 1, nombre: 'Pan Blanco Bimbo Grande', precio: 45.0, cantidad: 5, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Panaderia'},
+            {id: 2, nombre: 'Leche Entera Santa Clara 1L', precio: 32, cantidad: 1, unidad:"litro", total:["cantidad", "precio"], categoria: 'Lacteos'},
+            {id: 3, nombre: 'Huevos Bachoco', precio: 32, cantidad: 12, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Huevos'},
+            {id: 4, nombre: 'Queso Manchego 250g', precio: 41, cantidad: 1, unidad:"kg", total:["cantidad", "precio"], categoria: 'Lacteos'},
+            {id: 5, nombre: 'Yogur Natural 24oz', precio: 25, cantidad: 24, unidad:"onza", total:["cantidad", "precio"], categoria: 'Lacteos'},
+            {id: 6, nombre: 'Mantequilla 200g', precio: 2.20, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Lacteos'},
+            {id: 7, nombre: 'Jamón Cocido 200g', precio: 2.85, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Embutidos'},
+            {id: 8, nombre: 'Pan Integral Bimbo 500g', precio: 1.30, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Panaderia'},
+            {id: 9, nombre: 'Leche Condensada 397g', precio: 1.10, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Lacteos'},
+            {id: 10, nombre: 'Papas', precio: 0.80, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Verduras'},
+            {id: 11, nombre: 'Manzanas', precio: 1.50, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Frutas'},
+            {id: 12, nombre: 'Pollo Entero', precio: 5.00, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Carnes'},
+            {id: 13, nombre: 'Arroz 1kg', precio: 1.20, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Cereales'},
+            {id: 14, nombre: 'Pasta 500g', precio: 0.90, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Cereales'},
+            {id: 15, nombre: 'Aceite de Oliva 1L', precio: 4.50, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Aceites'},
+            {id: 16, nombre: 'Azúcar 1kg', precio: 1.10, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Dulces'},
+            {id: 17, nombre: 'Sal 1kg', precio: 0.50, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Condimentos'},
         ];
 
         const config_default = {
@@ -193,10 +193,11 @@
             },
             table: {
                 cols: [
-                    {label: 'ID', field: 'id', type: 'number', min: 1},
                     {label: 'Producto', field: 'nombre', type : 'text'},
                     {label: 'Precio', field: 'precio', type: 'money'},
                     {label: 'Unidad', field: 'unidad', type: 'text'},
+                    {label: 'Cantidad', field: 'cantidad', type: 'number', edit: false},
+                    {label: 'Total', field: 'total', type: 'money', operator: 'multiply', add: false, edit: false},
                     {label: 'Categoría', field: 'categoria', type: 'text'},
                     {label: '*', field: 'actions', type: 'button', buttons: ["add", "edit", "delete", "save", "gedit"]}
                 ],
