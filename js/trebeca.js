@@ -502,7 +502,6 @@ const trebeca = (config, data) => {
             if(typeof td.dataset === "object" && typeof td.dataset.buttons === "string"){
                 const buttons = td.querySelectorAll('button');
                 buttons.forEach(button => {
-                    console.log(`Button type: ${button.dataset.type}`);
                     if(typeof button.dataset === "object" && typeof button.dataset.type === "string"){
                         switch (button.dataset.type) {
                             case 'edit':
@@ -511,14 +510,14 @@ const trebeca = (config, data) => {
                             case 'delete':
                                 button.style = 'display: normal;';
                                 break;
-                            case 'save': 
+                            case 'save':
                                 button.style = 'display: none;';
                                 break;
                             case 'cancel':
                                 button.style = 'display: none;';
                                 break;
                             default:
-                                button.style = 'display: none;';
+                                button.style = 'display: normal;';
                                 break;
                         }
                     }
