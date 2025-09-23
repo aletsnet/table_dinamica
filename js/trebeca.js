@@ -71,6 +71,7 @@ const trebeca = (config, data) => {
                     if(typeof col.operator !== "undefined" && col.operator !== ""){
                         value = operators(row, col.operator, value) || value;
                     }
+                    const buttons = config.buttons || {};
                     switch (col.type) {
                         case 'button':
                             td.dataset.buttons = true;
@@ -78,8 +79,8 @@ const trebeca = (config, data) => {
                                 const button = document.createElement('button');
                                 button.type = 'button';
                                 button.dataset.type = "edit";
-                                button.className = 'btn btn-warning btn-sm me-1 edit-btn';
-                                button.innerHTML = '<i class="fas fa-edit"></i>';
+                                button.className = buttons.edit?.class || 'btn btn-warning btn-sm me-1 edit-btn';
+                                button.innerHTML = buttons.edit?.label || '<i class="fas fa-edit"></i>';
                                 //button.style = "display: none;";
                                 button.addEventListener('click', (event) => { edit_item(event); });
                                 td.appendChild(button);
@@ -89,8 +90,8 @@ const trebeca = (config, data) => {
                                 const button = document.createElement('button');
                                 button.type = 'button';
                                 button.dataset.type = "delete";
-                                button.className = 'btn btn-danger btn-sm delete-btn';
-                                button.innerHTML = '<i class="fas fa-trash"></i>';
+                                button.className = buttons.delete?.class || 'btn btn-danger btn-sm delete-btn';
+                                button.innerHTML = buttons.delete?.label || '<i class="fas fa-trash"></i>';
                                 //button.style = "display: none;";
                                 button.addEventListener('click', (event) => { remove_item(event); });
                                 td.appendChild(button);
@@ -100,8 +101,8 @@ const trebeca = (config, data) => {
                                 const button = document.createElement('button');
                                 button.type = 'button';
                                 button.dataset.type = "save";
-                                button.className = 'btn btn-success btn-sm me-1 save-btn';
-                                button.innerHTML = '<i class="fas fa-save"></i>';
+                                button.className = buttons.save?.class || 'btn btn-success btn-sm me-1 save-btn';
+                                button.innerHTML = buttons.save?.label || '<i class="fas fa-save"></i>';
                                 button.style = "display: none;";
                                 button.addEventListener('click', (event) => { save_item(event); });
                                 td.appendChild(button);
@@ -109,12 +110,27 @@ const trebeca = (config, data) => {
                                 const button_cancel = document.createElement('button');
                                 button_cancel.type = 'button';
                                 button_cancel.dataset.type = "cancel";
-                                button_cancel.className = 'btn btn-secondary btn-sm cancel-btn';
-                                button_cancel.innerHTML = '<i class="fas fa-times"></i>';
+                                button_cancel.className = buttons.cancel?.class || 'btn btn-secondary btn-sm cancel-btn';
+                                button_cancel.innerHTML = buttons.cancel?.label || '<i class="fas fa-times"></i>';
                                 button_cancel.style = "display: none;";
                                 button_cancel.addEventListener('click', (event) => { cancel_item(event); });
                                 td.appendChild(button_cancel);
                             }
+
+                            //console.log(buttons);
+                            
+                            for (const btn of buttons) {
+                                if(btn.modo == "row_extra") {
+                                    const button = document.createElement('button');
+                                    button.type = 'button';
+                                    button.dataset.type = btn.type;
+                                    button.className = btn.class;
+                                    button.innerHTML = btn.label;
+                                    button.addEventListener('click', (event) => { btn.function(); });
+                                    td.appendChild(button);
+                                }   
+                            }
+
                             break;
                         default:
                             td.textContent = formatter(value, col.type) || '';
