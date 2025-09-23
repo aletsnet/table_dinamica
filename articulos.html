@@ -197,7 +197,7 @@
                     {label: 'Precio', field: 'precio', type: 'money'},
                     {label: 'Unidad', field: 'unidad', type: 'text'},
                     {label: 'Cantidad', field: 'cantidad', type: 'number', edit: false},
-                    {label: 'Total', field: 'total', type: 'money', operator: 'multiply', add: false, edit: false},
+                    {label: 'Total', field: 'total', type: 'money', operator: 'multiply', add: false, edit: false, reference: ["cantidad", "precio"]},
                     {label: 'Categoría', field: 'categoria', type: 'text'},
                     {label: '*', field: 'actions', type: 'button', buttons: ["add", "edit", "delete", "save", "gedit"]}
                 ],

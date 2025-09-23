@@ -11,7 +11,7 @@ const trebeca = (config, data) => {
         if(typeof td.dataset === "object" && typeof td.dataset.type === "string" && td.dataset.type !== "button"){
             const input = document.createElement('input');
             input.type = td.dataset.type || 'text';
-            input.value = td.textContent || '';
+            input.value = unformatter(td.textContent || '', td.dataset.type) || '';
             input.className = 'form-control form-control-sm';
             input.dataset.id = td.dataset.id || Date.now().toString();
             input.dataset.field = td.dataset.field || '';
@@ -68,59 +68,10 @@ const trebeca = (config, data) => {
                     const td = document.createElement('td');
                     td.dataset.type = col.type;
                     let value = row[col.field] || '';
-                    if(typeof value === "object" && Array.isArray(value)){
-                        let acum = null;
-                        switch (col.operator) {
-                            case 'rest':
-                                acum = 0;
-                                for (const v of value) { acum -= row[v] || 0;}
-                                value = acum;
-                                break;
-                            case 'sum':
-                                acum = 0;
-                                for (const v of value) { acum += row[v] || 0;}
-                                value = acum;
-                                break;
-                            case 'multiply':
-                                acum = 1;
-                                for (const v of value) { acum *= row[v] || 1;}
-                                value = acum;
-                                break;
-                            case 'concat':
-                                value = value.join(', ');
-                                break;
-                            default:
-                                value = value.join(' ');
-                                break;
-                        }
-                        
+                    if(typeof col.operator !== "undefined" && col.operator !== ""){
+                        value = operators(row, col.operator, value) || value;
                     }
                     switch (col.type) {
-                        case 'text':
-                            td.textContent = value;
-                            td.dataset.id = row.id || '';
-                            td.dataset.field = col.field;
-                            break;
-                        case 'number':
-                            td.textContent = value || "0";
-                            td.dataset.id = row.id || '';
-                            td.dataset.field = col.field;
-                            break;
-                        case 'phone':
-                            td.textContent = format_phone(value) || "";
-                            td.dataset.id = row.id || '';
-                            td.dataset.field = col.field;
-                            break;
-                        case 'email':
-                            td.textContent = format_email(value) || "";
-                            td.dataset.id = row.id || '';
-                            td.dataset.field = col.field;
-                            break;
-                        case 'money':
-                            td.textContent = format_money(value) || "";
-                            td.dataset.id = row.id || '';
-                            td.dataset.field = col.field;
-                            break;
                         case 'button':
                             td.dataset.buttons = true;
                             if (col.buttons.includes("edit")) {
@@ -166,7 +117,10 @@ const trebeca = (config, data) => {
                             }
                             break;
                         default:
-                            td.textContent = row[col.field];
+                            td.textContent = formatter(value, col.type) || '';
+                            td.dataset.id = row.id || '';
+                            td.dataset.field = col.field;
+                            break;
                     }
                     newRow.appendChild(td);
                 }
@@ -294,13 +248,46 @@ const trebeca = (config, data) => {
             newItem.id = Date.now().toString(); // Genera un ID único basado en la marca de tiempo
             tr_row.dataset.id = newItem.id;
             for (const td of tr_row.children) {
+                const col = columns.find(element => element.field === td.dataset.field);
                 if (td.nodeName === "TD" && td.dataset.type !== "button") {
                     const input = td.querySelector('input');
                     if (input) {
-                        newItem[td.dataset.field] = input.value;
-                        td.textContent = input.value;
+                        valor = input.value || "";
+                        newItem[td.dataset.field] = valor;
+                        td.textContent = formatter(valor, col.type) || '';
                         td.classList.remove('td_editable');
+                        
+                    }else{
+                        //console.log(`Operador: ${col.operator} en campo ${col.field}`, valor);
+                        valor = 0;
+                        if(typeof col.operator !== "undefined" && col.operator !== ""){
+                            valor = operators(newItem, col.operator, col.reference);
+                        }
+                        td.textContent = formatter(valor, col.type) || '';
                     }
+                }else{
+                    const buttons = td.querySelectorAll('button');
+                    buttons.forEach(button => {
+                        if(typeof button.dataset === "object" && typeof button.dataset.type === "string"){
+                            switch (button.dataset.type) {
+                                case 'edit':
+                                    button.style = 'display: normal;';
+                                    break;
+                                case 'delete':
+                                    button.style = 'display: normal;';
+                                    break;
+                                case 'save':
+                                    button.style = 'display: none;';
+                                    break;
+                                case 'cancel':
+                                    button.style = 'display: none;';
+                                    break;
+                                default:
+                                    button.style = 'display: normal;';
+                                    break;
+                            }
+                        }
+                    });
                 }
             }
             data_show.push(newItem);
@@ -310,12 +297,44 @@ const trebeca = (config, data) => {
             if(typeof data_show_item.id !== "undefined"){
                 for (const td of tr_row.children) {
                     if (td.nodeName === "TD" && td.dataset.type !== "button") {
+                        const col = columns.find(element => element.field === td.dataset.field);
                         const input = td.querySelector('input');
                         if (input) {
-                            data_show_item[td.dataset.field] = input.value;
-                            td.textContent = input.value;
+                            valor = input.value || "";
+                            data_show_item[td.dataset.field] = valor;
+                            td.textContent = formatter(valor, col.type) || '';
                             td.classList.remove('td_editable');
+                        }else{
+                            if(typeof col.operator !== "undefined" && col.operator !== ""){
+                                valor = 0;
+                                valor = operators(data_show_item, col.operator, col.reference);
+                                data_show_item[td.dataset.field] = valor;
+                                td.textContent = formatter(valor, col.type) || '';
+                            }
                         }
+                    }else{
+                        const buttons = td.querySelectorAll('button');
+                        buttons.forEach(button => {
+                            if(typeof button.dataset === "object" && typeof button.dataset.type === "string"){
+                                switch (button.dataset.type) {
+                                    case 'edit':
+                                        button.style = 'display: normal;';
+                                        break;
+                                    case 'delete':
+                                        button.style = 'display: normal;';
+                                        break;
+                                    case 'save':
+                                        button.style = 'display: none;';
+                                        break;
+                                    case 'cancel':
+                                        button.style = 'display: none;';
+                                        break;
+                                    default:
+                                        button.style = 'display: normal;';
+                                        break;
+                                }
+                            }
+                        });
                     }
                 }
             }
@@ -326,7 +345,7 @@ const trebeca = (config, data) => {
         if(typeof config.save === "function"){
             config.save(event);
         }
-        show_data();
+        //show_data();
         totalCount();
     }
 
@@ -379,6 +398,8 @@ const trebeca = (config, data) => {
         const td_bts = event.target.closest('td');
         const tr_row = td_bts.closest('tr');
         const columns = config.table.cols;
+        const item_id = tr_row.dataset.id || "";
+        const item_data = data_show.find(item => item.id == item_id) || {};
         let first_field = "";
         let firstEditableElement = null;
 
@@ -386,13 +407,20 @@ const trebeca = (config, data) => {
             const td = tr_row.children[key];
             const col = columns[key];
             if(typeof td === "object" && td.nodeName === "TD"){
-                //console.log(td.dataset);
                 if(td.className === "td_editable"){
                     continue;
                 }
 
                 if(typeof col.edit === "undefined" && col.edit !== false){
                     create_input(td);
+                }else{
+                    if(item_data[col.field] == 0 || item_data[col.field] == "0" || item_data[col.field] == "" || item_data[col.field] == null){
+                        create_input(td);
+                    }
+                }
+
+                if(typeof col.operator !== "undefined" && col.operator !== ""){
+                    td.innerHTML = operators(item_data, col.operator, item_data[col.field]) || "";
                 }
 
                 if(first_field === ""){
@@ -404,7 +432,6 @@ const trebeca = (config, data) => {
             if(typeof td.dataset === "object" && typeof td.dataset.buttons === "string"){
                 const buttons = td.querySelectorAll('button');
                 buttons.forEach(button => {
-                    console.log(`Button type: ${button.dataset.type}`);
                     if(typeof button.dataset === "object" && typeof button.dataset.type === "string"){
                         switch (button.dataset.type) {
                             case 'edit':
@@ -577,72 +604,143 @@ const trebeca = (config, data) => {
         
     }
 
-    if(typeof config.table.cols === "object"){
-        //head
-        tableHead.innerHTML = "";
-        if(typeof config.search === "object"){
-            const searchInput = document.createElement('input');
-            searchInput.type = 'text';
-            searchInput.placeholder = 'Buscar...';
-            searchInput.className = 'form-control';
-            searchInput.value = config.search.value || '';
-            searchInput.addEventListener('input', (event) => {
-                const query = event.target.value.toLowerCase();
-                search_data(query);
-            });
-
-            const tr = document.createElement('tr');
-            const th = document.createElement('th');
-            th.colSpan = config.table.cols.length -1;
-            th.appendChild(searchInput);
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'btn btn-primary';
-            button.innerHTML = '<i class="fas fa-search"></i>';
-            button.addEventListener('click', () => {
-                const query = searchInput.value.toLowerCase();
-                search_data(query);
-            });
-            const th2 = document.createElement('th');
-            th2.appendChild(button);
-            tr.appendChild(th);
-            tr.appendChild(th2);
-            tableHead.appendChild(tr);
-        }
-        
-        if(typeof config.table === "object"){
-            const table = config.table;
-            if(typeof table.cols === "object"){
-                const cols = table.cols;
-                const ncols = cols.length;
-                const tr_h = document.createElement('tr');
-                for(let col in cols){
-                    const th = document.createElement('th');
-                    if(cols[col].type === 'button'){
-                        if(cols[col].buttons.includes("add")){
-                            const addButton = document.createElement('button');
-                            addButton.type = 'button';
-                            addButton.className = 'btn btn-success';
-                            addButton.innerHTML = '<i class="fas fa-plus"></i>';
-                            addButton.addEventListener('click', function() {
-                                add_item();
-                            });
-                            th.appendChild(addButton);
-                        }
-                    }else{
-                        th.textContent = cols[col].label;
-                    }
-                    tr_h.appendChild(th);
-                }
-                tableHead.appendChild(tr_h);
+    const operators = (item, operator, value) => {
+        let result = null;
+        if(typeof value === "object" && Array.isArray(value) && typeof item.id !== "undefined"){
+            switch (operator) {
+                case 'rest':
+                    result = 0;
+                    for (const v of value) { result -= item[v] || 0;}
+                    break;
+                case 'sum':
+                    result = 0;
+                    for (const v of value) { result += item[v] || 0;}
+                    break;
+                case 'multiply':
+                    result = 1;
+                    for (const v of value) { result *= item[v] || 1;}
+                    break;
+                case 'concat':
+                    result = value.join(', ');
+                    break;
+                default:
+                    result = value.join(' ');
+                    break;
             }
         }
-
-        //body
-        show_data();
-
-        //foot
-        totalCount();
+        return result;
     }
-    
+
+    const formatter = (value, type) => {
+        let result = value;
+        switch (type) {
+            case 'money':
+                result = format_money(value);
+                break;
+            case 'phone':
+                result = format_phone(value);
+                break;
+            case 'email':
+                result = format_email(value);
+                break;
+            default:
+                result = value;
+                break;
+        }
+        return result;
+    }
+
+    const unformatter = (value, type) => {
+        let result = value;
+        switch (type) {
+            case 'money':
+                // Elimina símbolo de moneda y separadores
+                result = value.replace(/[^\d.-]/g, '');
+                break;
+            case 'phone':
+                // Elimina espacios y caracteres no numéricos
+                result = value.replace(/\D/g, '');
+                break;
+            case 'email':
+                // Devuelve el email tal cual
+                result = value.trim();
+                break;
+            default:
+                result = value;
+                break;
+        }
+        return result;
+    }
+
+    const init = () => {
+        if(typeof config.table.cols === "object"){
+            //head
+            tableHead.innerHTML = "";
+            if(typeof config.search === "object"){
+                const searchInput = document.createElement('input');
+                searchInput.type = 'text';
+                searchInput.placeholder = 'Buscar...';
+                searchInput.className = 'form-control';
+                searchInput.value = config.search.value || '';
+                searchInput.addEventListener('input', (event) => {
+                    const query = event.target.value.toLowerCase();
+                    search_data(query);
+                });
+
+                const tr = document.createElement('tr');
+                const th = document.createElement('th');
+                th.colSpan = config.table.cols.length -1;
+                th.appendChild(searchInput);
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'btn btn-primary';
+                button.innerHTML = '<i class="fas fa-search"></i>';
+                button.addEventListener('click', () => {
+                    const query = searchInput.value.toLowerCase();
+                    search_data(query);
+                });
+                const th2 = document.createElement('th');
+                th2.appendChild(button);
+                tr.appendChild(th);
+                tr.appendChild(th2);
+                tableHead.appendChild(tr);
+            }
+            
+            if(typeof config.table === "object"){
+                const table = config.table;
+                if(typeof table.cols === "object"){
+                    const cols = table.cols;
+                    const ncols = cols.length;
+                    const tr_h = document.createElement('tr');
+                    for(let col in cols){
+                        const th = document.createElement('th');
+                        if(cols[col].type === 'button'){
+                            if(cols[col].buttons.includes("add")){
+                                const addButton = document.createElement('button');
+                                addButton.type = 'button';
+                                addButton.className = 'btn btn-success';
+                                addButton.innerHTML = '<i class="fas fa-plus"></i>';
+                                addButton.addEventListener('click', function() {
+                                    add_item();
+                                });
+                                th.appendChild(addButton);
+                            }
+                        }else{
+                            th.textContent = cols[col].label;
+                        }
+                        tr_h.appendChild(th);
+                    }
+                    tableHead.appendChild(tr_h);
+                }
+            }
+
+            //body
+            show_data();
+
+            //foot
+            totalCount();
+        }
+    }
+
+    init();
 }
