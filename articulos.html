@@ -235,6 +235,7 @@
         }
         
         const btn_edit = (event) => {
+            //console.log(event);
             const id = event.target.id;
             console.log("Editar registro id:", id);
             
@@ -246,8 +247,9 @@
         }
 
         const btn_save = (event) => {
-            const id = event.target.id;
-            console.log("Guardar registro id:", id);
+            console.log(event);
+            /*const id = event.children[0].id;
+            console.log("Guardar registro id:", id);*/
         }
 
         const other_function = () => {

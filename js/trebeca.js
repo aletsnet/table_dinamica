@@ -116,21 +116,19 @@ const trebeca = (config, data) => {
                                 button_cancel.addEventListener('click', (event) => { cancel_item(event); });
                                 td.appendChild(button_cancel);
                             }
-
-                            //console.log(buttons);
-                            
-                            for (const btn of buttons) {
-                                if(btn.modo == "row_extra") {
-                                    const button = document.createElement('button');
-                                    button.type = 'button';
-                                    button.dataset.type = btn.type;
-                                    button.className = btn.class;
-                                    button.innerHTML = btn.label;
-                                    button.addEventListener('click', (event) => { btn.function(); });
-                                    td.appendChild(button);
-                                }   
+                            if(typeof buttons !== "undefined" && Array.isArray(buttons)){
+                                for (const btn of buttons) {
+                                    if(btn.modo == "row_extra") {
+                                        const button = document.createElement('button');
+                                        button.type = 'button';
+                                        button.dataset.type = btn.type;
+                                        button.className = btn.class;
+                                        button.innerHTML = btn.label;
+                                        button.addEventListener('click', (event) => { btn.function(); });
+                                        td.appendChild(button);
+                                    }   
+                                }
                             }
-
                             break;
                         default:
                             td.textContent = formatter(value, col.type) || '';
@@ -244,7 +242,6 @@ const trebeca = (config, data) => {
         
         if(typeof config.add === "function"){
             config.add();
-            //console.log("Add action executed");
         }
     }
 
@@ -252,6 +249,7 @@ const trebeca = (config, data) => {
         const td_bts = event.target.closest('td');
         const tr_row = td_bts.closest('tr');
         const columns = config.table.cols;
+        let id_item = tr_row.dataset.id || "";
         
         if(tr_row.dataset.id === "_new"){
             const newItem = {};
@@ -263,6 +261,7 @@ const trebeca = (config, data) => {
             }
             newItem.id = Date.now().toString(); // Genera un ID único basado en la marca de tiempo
             tr_row.dataset.id = newItem.id;
+            id_item = newItem.id;
             for (const td of tr_row.children) {
                 const col = columns.find(element => element.field === td.dataset.field);
                 if (td.nodeName === "TD" && td.dataset.type !== "button") {
@@ -274,12 +273,12 @@ const trebeca = (config, data) => {
                         td.classList.remove('td_editable');
                         
                     }else{
-                        //console.log(`Operador: ${col.operator} en campo ${col.field}`, valor);
-                        valor = 0;
                         if(typeof col.operator !== "undefined" && col.operator !== ""){
+                            valor = 0;
                             valor = operators(newItem, col.operator, col.reference);
+                            newItem[td.dataset.field] = valor;
+                            td.textContent = formatter(valor, col.type) || '';
                         }
-                        td.textContent = formatter(valor, col.type) || '';
                     }
                 }else{
                     const buttons = td.querySelectorAll('button');
@@ -307,8 +306,10 @@ const trebeca = (config, data) => {
                 }
             }
             data_show.push(newItem);
+            data.push(newItem);
         }else{
             let id_ = tr_row.dataset.id;
+            id_item = id_;
             let data_show_item = data_show.find(item => { return item.id == id_; });
             if(typeof data_show_item.id !== "undefined"){
                 for (const td of tr_row.children) {
@@ -359,7 +360,7 @@ const trebeca = (config, data) => {
         
 
         if(typeof config.save === "function"){
-            config.save(event);
+            config.save(id_item);
         }
         //show_data();
         totalCount();
@@ -385,14 +386,15 @@ const trebeca = (config, data) => {
                     for (const td of tr_row.children) {
                         if (td.nodeName === "TD") {
                             if(td.dataset.field == "id"){
-                                console.log(`Eliminar ID: ${td.dataset.id}`);
-
-                                data_show = data_show.filter(i => { console.log(i.id, td.dataset.id);
-                                 return i.id !== td.dataset.id });
+                                data_show = data_show.filter(i => { return i.id !== td.dataset.id });
+                                data = data.filter(i => { return i.id !== td.dataset.id });
                                 break;
                             }
                         }
                     }
+
+                    tr_row.remove();
+                    totalCount();
 
                     if(typeof config.delete === "function"){
                         config.delete(event);
