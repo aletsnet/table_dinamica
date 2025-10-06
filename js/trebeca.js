@@ -7,7 +7,7 @@ const trebeca = (config, data) => {
     let page_show = 0;
     let count_row = 0;
 
-    const create_input = (td) => {
+    const create_input = (td, field) => {
         if(typeof td.dataset === "object" && typeof td.dataset.type === "string" && td.dataset.type !== "button"){
             const input = document.createElement('input');
             input.type = td.dataset.type || 'text';
@@ -15,10 +15,21 @@ const trebeca = (config, data) => {
             input.className = 'form-control form-control-sm';
             input.dataset.id = td.dataset.id || Date.now().toString();
             input.dataset.field = td.dataset.field || '';
+            input.placeholder = field.placeholder || field.label || '';
             td.innerHTML = '';
+            
             if(td.dataset.field === "id" && input.value === ""){
                 input.value = Date.now().toString();
             }
+
+            if(typeof field.valuedefault !== "undefined" && (input.value === "" || input.value === null)){
+                input.value = field.valuedefault || '';
+            }
+
+            if(typeof field.typefunc === "string" && field.typefunc !== "" && typeof field.function === "function"){
+                input.addEventListener(field.typefunc, (event) => { field.function(event); });
+            }
+            
             td.appendChild(input);
             td.classList.add('td_editable');
         }
@@ -225,7 +236,7 @@ const trebeca = (config, data) => {
                 td.dataset.id = "_new";
                 td.dataset.field = col.field;
                 if(typeof col.add === "undefined" && col.add !== false){
-                    create_input(td);
+                    create_input(td,col);
                 }
             }
 
@@ -307,7 +318,6 @@ const trebeca = (config, data) => {
                     });
                 }
             }
-            data_show.push(newItem);
             data.push(newItem);
         }else{
             let id_ = tr_row.dataset.id;
@@ -432,10 +442,10 @@ const trebeca = (config, data) => {
                 }
 
                 if(typeof col.edit === "undefined" && col.edit !== false){
-                    create_input(td);
+                    create_input(td,col);
                 }else{
                     if(item_data[col.field] == 0 || item_data[col.field] == "0" || item_data[col.field] == "" || item_data[col.field] == null){
-                        create_input(td);
+                        create_input(td,col);
                     }
                 }
 
