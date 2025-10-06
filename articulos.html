@@ -43,7 +43,7 @@
                     <h3>
                         Mi tabla dinamica
                     </h3>
-                    <table class="table table-striped trebeca" >
+                    <table id="trebeca" class="table table-striped trebeca" >
                         <thead>
                             <tr>
                                 <th>Nombre</th>
@@ -167,32 +167,33 @@
     <script>
         // trebeca.js
         const data = [
-            {id: 1, nombre: 'Pan Blanco Bimbo Grande', precio: 45.0, cantidad: 5, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Panaderia'},
-            {id: 2, nombre: 'Leche Entera Santa Clara 1L', precio: 32, cantidad: 1, unidad:"litro", total:["cantidad", "precio"], categoria: 'Lacteos'},
-            {id: 3, nombre: 'Huevos Bachoco', precio: 32, cantidad: 12, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Huevos'},
-            {id: 4, nombre: 'Queso Manchego 250g', precio: 41, cantidad: 1, unidad:"kg", total:["cantidad", "precio"], categoria: 'Lacteos'},
-            {id: 5, nombre: 'Yogur Natural 24oz', precio: 25, cantidad: 24, unidad:"onza", total:["cantidad", "precio"], categoria: 'Lacteos'},
-            {id: 6, nombre: 'Mantequilla 200g', precio: 2.20, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Lacteos'},
-            {id: 7, nombre: 'Jamón Cocido 200g', precio: 2.85, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Embutidos'},
-            {id: 8, nombre: 'Pan Integral Bimbo 500g', precio: 1.30, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Panaderia'},
-            {id: 9, nombre: 'Leche Condensada 397g', precio: 1.10, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Lacteos'},
-            {id: 10, nombre: 'Papas', precio: 0.80, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Verduras'},
-            {id: 11, nombre: 'Manzanas', precio: 1.50, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Frutas'},
-            {id: 12, nombre: 'Pollo Entero', precio: 5.00, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Carnes'},
-            {id: 13, nombre: 'Arroz 1kg', precio: 1.20, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Cereales'},
-            {id: 14, nombre: 'Pasta 500g', precio: 0.90, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Cereales'},
-            {id: 15, nombre: 'Aceite de Oliva 1L', precio: 4.50, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Aceites'},
-            {id: 16, nombre: 'Azúcar 1kg', precio: 1.10, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Dulces'},
-            {id: 17, nombre: 'Sal 1kg', precio: 0.50, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Condimentos'},
+            {id: 1, code: "7500810031872", nombre: 'Pan Blanco Bimbo Grande', precio: 45.0, cantidad: 5, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Panaderia'},
+            {id: 2, code: "7500810020920", nombre: 'Leche Entera Santa Clara 1L', precio: 32, cantidad: 1, unidad:"litro", total:["cantidad", "precio"], categoria: 'Lacteos'},
+            {id: 3, code: "7501055307906", nombre: 'Huevos Bachoco', precio: 32, cantidad: 12, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Huevos'},
+            {id: 4, code: "7501017362950", nombre: 'Queso Manchego 250g', precio: 41, cantidad: 1, unidad:"kg", total:["cantidad", "precio"], categoria: 'Lacteos'},
+            {id: 5, code: "041789001956", nombre: 'Yogur Natural 24oz', precio: 25, cantidad: 24, unidad:"onza", total:["cantidad", "precio"], categoria: 'Lacteos'},
+            {id: 6, code: "7500810031877", nombre: 'Mantequilla 200g', precio: 2.20, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Lacteos'},
+            {id: 7, code: "7500810031878", nombre: 'Jamón Cocido 200g', precio: 2.85, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Embutidos'},
+            {id: 8, code: "7500810031879", nombre: 'Pan Integral Bimbo 500g', precio: 1.30, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Panaderia'},
+            {id: 9, code: "7500810031880", nombre: 'Leche Condensada 397g', precio: 1.10, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Lacteos'},
+            {id: 10, code: "7500810031881", nombre: 'Papas', precio: 0.80, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Verduras'},
+            {id: 11, code: "7500810031882", nombre: 'Manzanas', precio: 1.50, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Frutas'},
+            {id: 12, code: "7500810031883", nombre: 'Pollo Entero', precio: 5.00, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Carnes'},
+            {id: 13, code: "7500810031884", nombre: 'Arroz 1kg', precio: 1.20, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Cereales'},
+            {id: 14, code: "7500810031885", nombre: 'Pasta 500g', precio: 0.90, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Cereales'},
+            {id: 15, code: "7500810031886", nombre: 'Aceite de Oliva 1L', precio: 4.50, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Aceites'},
+            {id: 16, code: "7500810031887", nombre: 'Azúcar 1kg', precio: 1.10, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Dulces'},
+            {id: 17, code: "7500810031888", nombre: 'Sal 1kg', precio: 0.50, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Condimentos'},
         ];
 
         const config_default = {
             search: {
                 value: '',
-                fields: ['nombre', 'categoria']
+                fields: ['code','nombre', 'categoria']
             },
             table: {
                 cols: [
+                    {label: 'Code', field: 'code', type: 'text', function: (event) => { search_code(event); }, typefunc: 'keyup'},
                     {label: 'Producto', field: 'nombre', type : 'text', valuedefault: 'Nuevo Producto'},
                     {label: 'Precio', field: 'precio', type: 'money'},
                     {label: 'Unidad', field: 'unidad', type: 'text'},
@@ -260,6 +261,35 @@
                 icon: 'info',
                 confirmButtonText: 'Cerrar'
             });
+        }
+
+        const search_code = (event) => {
+            const t = event.key || '';
+            switch(t){
+                case 'Enter':
+                    const input = event.target || null;
+                    const tr = event.target.closest('tr') || null;
+                    const inputs = tr.querySelectorAll('input') || [];
+                    const row = data.find( item => item.code === input.value );
+
+                    if(row){
+                        for(element of inputs){
+                            const field = element.dataset.field || '';
+                            if(field !== '' && typeof row[field] !== "undefined"){
+                                element.value = row[field];
+                            }
+                        }
+                    }else{
+                        for(element of inputs){
+                            const field = element.dataset.field || '';
+                            if(field !== "code"){
+                                element.value = "";
+                            }
+                        }
+                    }
+                    
+                    break;
+            }
         }
 
         document.addEventListener('DOMContentLoaded', trebeca(config_default, data));
