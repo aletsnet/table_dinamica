@@ -1,5 +1,5 @@
 const trebeca = (config, data) => {
-    const table_rebeca = document.querySelector('.trebeca');
+    const table_rebeca = document.querySelector("#" + config.tableClass);
     const tableHead = table_rebeca.querySelector('thead');
     const tableBody = table_rebeca.querySelector('tbody');
     const tableFoot = table_rebeca.querySelector('tfoot');
@@ -67,6 +67,7 @@ const trebeca = (config, data) => {
                     const col = columns[key];
                     const td = document.createElement('td');
                     td.dataset.type = col.type;
+                    td.dataset.id = row.id || '';
                     let value = row[col.field] || '';
                     if(typeof col.operator !== "undefined" && col.operator !== ""){
                         value = operators(row, col.operator, value) || value;
@@ -122,9 +123,10 @@ const trebeca = (config, data) => {
                                         const button = document.createElement('button');
                                         button.type = 'button';
                                         button.dataset.type = btn.type;
+                                        button.dataset.id = row.id || '';
                                         button.className = btn.class;
                                         button.innerHTML = btn.label;
-                                        button.addEventListener('click', (event) => { btn.function(); });
+                                        button.addEventListener('click', (event) => { btn.function(event); });
                                         td.appendChild(button);
                                     }   
                                 }

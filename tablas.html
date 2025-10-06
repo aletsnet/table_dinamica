@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MultiTablas</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Mi Proyecto</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#sobre">Sobre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contacto">Contacto</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero-section bg-light py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-6">
+                    <h3>
+                        Tabla Master
+                    </h3>
+                    <table id="tmaster" class="table table-striped tmaster" >
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Edad</th>
+                                <th>Ciudad</th>
+                                <th>
+                                    <button type="button" class="btn btn-success btn-sm me-1 btn-add-row">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3">No hay datos disponibles</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Total de registros:</td>
+                                <td class="fw-bold" id="totalCount">3</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    
+                    <!-- Modal para añadir/editar registro -->
+                    <div class="modal fade" id="personModal" tabindex="-1" aria-labelledby="personModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="personModalLabel">Añadir Persona</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="personForm">
+                                        <div class="mb-3">
+                                            <label for="personName" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" id="personName" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="personAge" class="form-label">Edad</label>
+                                            <input type="number" class="form-control" id="personAge" min="1" max="120" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="personCity" class="form-label">Ciudad</label>
+                                            <input type="text" class="form-control" id="personCity" required>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-primary" id="savePersonBtn">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <h3>
+                        Tabla Children
+                    </h3>
+                    <table id="tchildren" class="table table-striped tchildren" >
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Edad</th>
+                                <th>Ciudad</th>
+                                <th>
+                                    <button type="button" class="btn btn-success btn-sm me-1 btn-add-row">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3">No hay datos disponibles</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Total de registros:</td>
+                                <td class="fw-bold" id="totalCount">3</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2025 Mi Proyecto. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p>Desarrollado con ❤️ usando Bootstrap</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom JavaScript -->
+    <script src="js/trebeca.js"></script>
+    <script>
+        // trebeca.js
+        const data = [
+            {id: 1, nombre: 'Alejandro Lopez Ortiz', descripcion: 'Primer registro', fecha: '2025-09-01', lista:[
+                {id: 1, code: '', nombre: 'Tortillas', cantidad: 5, precio: 2.00, total: 10.00},
+                {id: 6, code: '', nombre: 'Pan', cantidad: 2, precio: 1.20, total: 2.40},
+                {id: 7, code: '', nombre: 'Queso', cantidad: 1, precio: 3.50, total: 3.50}
+            ]},
+            {id: 2, nombre: 'Maria Garcia Perez', descripcion: 'Segundo registro', fecha: '2025-09-02', lista:[
+                {id: 2, code: '', nombre: 'Arroz', cantidad: 3, precio: 1.50, total: 4.50},
+                {id: 8, code: '', nombre: 'Leche', cantidad: 2, precio: 0.90, total: 1.80},
+                {id: 9, code: '', nombre: 'Huevos', cantidad: 12, precio: 0.10, total: 1.20}
+            ]},
+            {id: 3, nombre: 'Juan Martinez Sanchez', descripcion: 'Tercer registro', fecha: '2025-09-03', lista:[
+                {id: 3, code: '', nombre: 'Frijoles', cantidad: 2, precio: 1.75, total: 3.50},
+            ]},
+            {id: 4, nombre: 'Laura Rodriguez Gomez', descripcion: 'Cuarto registro', fecha: '2025-09-04', lista:[
+                {id: 4, code: '', nombre: 'Maiz', cantidad: 4, precio: 2.25, total: 9.00},
+            ]},
+            {id: 5, nombre: 'Carlos Hernandez Diaz', descripcion: 'Quinto registro', fecha: '2025-09-05', lista:[
+                {id: 5, code: '', nombre: 'Salsa', cantidad: 1, precio: 3.00, total: 3.00},
+            ]},
+        ];
+
+        const config_master = {
+            search: {
+                value: '',
+                fields: ['nombre', 'descripcion', 'fecha']
+            },
+            table: {
+                cols: [
+                    {label: 'ID', field: 'id', type: 'number', min: 1},
+                    {label: 'Nombre', field: 'nombre', type : 'text'},
+                    {label: 'Descripcion', field: 'descripcion', type: 'text'},
+                    {label: 'Fecha', field: 'fecha', type: 'date'},
+                    {label: '*', field: 'actions', type: 'button', buttons: ["add", "edit", "delete", "save", "gedit"]}
+                ],
+                footer: {
+                    label: 'Total de registros:',
+                    field: 'count',
+                    type: 'text'
+                }
+            },
+            buttons: [
+                    { name: "add", label: '<i class="fas fa-plus"></i>', class: 'btn btn-success btn-sm me-1', modo: "new"  },
+                    { name: "edit", label: '<i class="fas fa-edit"></i>', class: 'btn btn-warning btn-sm me-1', modo: "row" },
+                    { name: "delete", label: '<i class="fas fa-trash"></i>', class: 'btn btn-danger btn-sm me-1', modo: "row" },
+                    { name: "save", label: '<i class="fas fa-save"></i>', class: 'btn btn-success btn-sm me-1', modo: "row" },
+                    { name: "btn_extra", label: '<i class="fas fa-info-circle"></i>', class: 'btn btn-info btn-sm m-1', modo: "row_extra", function: (event) => { show_data(event) } },
+                ],
+            tableClass: 'tmaster',
+            // Usando referencias a funciones (más seguro que eval)
+            add: (event) => {btn_add(event)},
+            edit: (event) => {btn_edit(event)},
+            delete: (event) => {btn_delete(event)},   
+            save: (event) => {btn_save(event)},
+        };
+
+        const config_children = {
+            search: {
+                value: '',
+                fields: ['nombre', 'cantidad', 'precio', 'total']
+            },
+            table: {
+                cols: [
+                    {label: 'ID', field: 'id', type: 'number', min: 1},
+                    {label: 'Nombre', field: 'nombre', type : 'text'},
+                    {label: 'Cantidad', field: 'cantidad', type: 'number', min: 1},
+                    {label: 'Precio', field: 'precio', type: 'number', min: 0.01, step: 0.01},
+                    {label: 'Total', field: 'total', type: 'number', min: 0.01, step: 0.01},
+                    {label: '*', field: 'actions', type: 'button', buttons: ["add", "edit", "delete", "save"]}
+                ],
+                footer: {
+                    label: 'Total de registros:',
+                    field: 'count',
+                    type: 'text'
+                }
+            },
+            buttons: [
+                    { name: "add", label: '<i class="fas fa-plus"></i>', class: 'btn btn-success btn-sm me-1', modo: "new"  },
+                    { name: "edit", label: '<i class="fas fa-edit"></i>', class: 'btn btn-warning btn-sm me-1', modo: "row" },
+                    { name: "delete", label: '<i class="fas fa-trash"></i>', class: 'btn btn-danger btn-sm me-1', modo: "row" },
+                    { name: "save", label: '<i class="fas fa-save"></i>', class: 'btn btn-success btn-sm me-1', modo: "row" },
+                ],
+            tableClass: 'tchildren',
+        };
+
+        const btn_add = () => {
+            console.log("Agregar nuevo registro");
+        }
+        
+        const btn_edit = (event) => {
+            const id = event.target.id;
+            console.log("Editar registro id:", id);
+            
+        }
+
+        const btn_delete = (event) => {
+            const id = event.target.id;
+            console.log("Eliminar registro id:", id);
+        }
+
+        const btn_save = (event) => {
+            const id = event.target.id;
+            console.log("Guardar registro id:", id);
+        }
+
+        const show_data = (event) => {
+            const td_bts = event.target.closest('td');
+            let row = data.find(item => item.id == td_bts.dataset.id);
+            if(typeof row.lista !== "undefined"){
+                let children_data = row.lista || [];
+                document.addEventListener('DOMContentLoaded', trebeca(config_children, children_data));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', trebeca(config_master, data));
+
+        
+    </script>
+</body>
+</html>
