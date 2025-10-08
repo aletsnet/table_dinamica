@@ -199,7 +199,7 @@
                     {label: 'Unidad', field: 'unidad', type: 'text'},
                     {label: 'Cantidad', field: 'cantidad', type: 'number', edit: false},
                     {label: 'Total', field: 'total', type: 'money', operator: 'multiply', add: false, edit: false, reference: ["cantidad", "precio"]},
-                    {label: 'Categoría', field: 'categoria', type: 'text'},
+                    {label: 'Categoría', field: 'categoria', type: 'select', options:["Abarrotes","Panaderia", "Lacteos", "Huevos", "Embutidos", "Verduras", "Frutas", "Carnes", "Cereales", "Aceites", "Dulces", "Condimentos"], valuedefault: 'Abarrotes'},
                     {label: '*', field: 'actions', type: 'button', buttons: ["add", "edit", "delete", "save", "btn_extra"]}
                 ],
                 footer: {
