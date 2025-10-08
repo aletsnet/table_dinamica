@@ -167,23 +167,23 @@
     <script>
         // trebeca.js
         const data = [
-            {id: 1, code: "7500810031872", nombre: 'Pan Blanco Bimbo Grande', precio: 45.0, cantidad: 5, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Panaderia'},
-            {id: 2, code: "7500810020920", nombre: 'Leche Entera Santa Clara 1L', precio: 32, cantidad: 1, unidad:"litro", total:["cantidad", "precio"], categoria: 'Lacteos'},
-            {id: 3, code: "7501055307906", nombre: 'Huevos Bachoco', precio: 32, cantidad: 12, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Huevos'},
-            {id: 4, code: "7501017362950", nombre: 'Queso Manchego 250g', precio: 41, cantidad: 1, unidad:"kg", total:["cantidad", "precio"], categoria: 'Lacteos'},
-            {id: 5, code: "041789001956", nombre: 'Yogur Natural 24oz', precio: 25, cantidad: 24, unidad:"onza", total:["cantidad", "precio"], categoria: 'Lacteos'},
-            {id: 6, code: "7500810031877", nombre: 'Mantequilla 200g', precio: 2.20, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Lacteos'},
-            {id: 7, code: "7500810031878", nombre: 'Jamón Cocido 200g', precio: 2.85, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Embutidos'},
-            {id: 8, code: "7500810031879", nombre: 'Pan Integral Bimbo 500g', precio: 1.30, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Panaderia'},
-            {id: 9, code: "7500810031880", nombre: 'Leche Condensada 397g', precio: 1.10, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Lacteos'},
-            {id: 10, code: "7500810031881", nombre: 'Papas', precio: 0.80, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Verduras'},
-            {id: 11, code: "7500810031882", nombre: 'Manzanas', precio: 1.50, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Frutas'},
-            {id: 12, code: "7500810031883", nombre: 'Pollo Entero', precio: 5.00, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Carnes'},
-            {id: 13, code: "7500810031884", nombre: 'Arroz 1kg', precio: 1.20, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Cereales'},
-            {id: 14, code: "7500810031885", nombre: 'Pasta 500g', precio: 0.90, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Cereales'},
-            {id: 15, code: "7500810031886", nombre: 'Aceite de Oliva 1L', precio: 4.50, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Aceites'},
-            {id: 16, code: "7500810031887", nombre: 'Azúcar 1kg', precio: 1.10, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Dulces'},
-            {id: 17, code: "7500810031888", nombre: 'Sal 1kg', precio: 0.50, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Condimentos'},
+            {id: 1, code: "7500810031872", nombre: 'Pan Blanco Bimbo Grande', precio: 45.0, cantidad: 5, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Panaderia', foto: 'img/bread.png'},
+            {id: 2, code: "7500810020920", nombre: 'Leche Entera Santa Clara 1L', precio: 32, cantidad: 1, unidad:"litro", total:["cantidad", "precio"], categoria: 'Lacteos', foto: 'img/milk.png'},
+            {id: 3, code: "7501055307906", nombre: 'Huevos Bachoco', precio: 32, cantidad: 12, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Huevos', foto: 'img/eggs.png'},
+            {id: 4, code: "7501017362950", nombre: 'Queso Manchego 250g', precio: 41, cantidad: 1, unidad:"kg", total:["cantidad", "precio"], categoria: 'Lacteos', foto: 'img/cheese.png'},
+            {id: 5, code: "041789001956", nombre: 'Yogur Natural 24oz', precio: 25, cantidad: 24, unidad:"onza", total:["cantidad", "precio"], categoria: 'Lacteos', foto: 'img/yogurt.png'},
+            {id: 6, code: "7500810031877", nombre: 'Mantequilla 200g', precio: 2.20, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Lacteos', foto: 'img/butter.png'},
+            {id: 7, code: "7500810031878", nombre: 'Jamón Cocido 200g', precio: 2.85, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Embutidos', foto: 'img/ham.png'},
+            {id: 8, code: "7500810031879", nombre: 'Pan Integral Bimbo 500g', precio: 1.30, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Panaderia', foto: 'img/bread.png'},
+            {id: 9, code: "7500810031880", nombre: 'Leche Condensada 397g', precio: 1.10, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Lacteos', foto: 'img/heavycream.png'},
+            {id: 10, code: "7500810031881", nombre: 'Papas', precio: 0.80, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Verduras', foto: 'img/potatoes.png'},
+            {id: 11, code: "7500810031882", nombre: 'Manzanas', precio: 1.50, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Frutas', foto: 'img/apple.png'},
+            {id: 12, code: "7500810031883", nombre: 'Pollo Entero', precio: 5.00, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Carnes', foto: 'img/chicken.png'},
+            {id: 13, code: "7500810031884", nombre: 'Arroz 1kg', precio: 1.20, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Cereales', foto: 'img/rice.png'},
+            {id: 14, code: "7500810031885", nombre: 'Pasta 500g', precio: 0.90, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Cereales', foto: 'img/pasta.png'},
+            {id: 15, code: "7500810031886", nombre: 'Aceite de Oliva 1L', precio: 4.50, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Aceites', foto: 'img/sunfloweroil.png'},
+            {id: 16, code: "7500810031887", nombre: 'Azúcar 1kg', precio: 1.10, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Dulces', foto: 'img/sugar.png'},
+            {id: 17, code: "7500810031888", nombre: 'Sal 1kg', precio: 0.50, cantidad: 1, unidad:"pieza", total:["cantidad", "precio"], categoria: 'Condimentos', foto: 'img/salt.png'},
         ];
 
         const config_default = {
@@ -200,6 +200,7 @@
                     {label: 'Cantidad', field: 'cantidad', type: 'number', edit: false},
                     {label: 'Total', field: 'total', type: 'money', operator: 'multiply', add: false, edit: false, reference: ["cantidad", "precio"]},
                     {label: 'Categoría', field: 'categoria', type: 'select', options:["Abarrotes","Panaderia", "Lacteos", "Huevos", "Embutidos", "Verduras", "Frutas", "Carnes", "Cereales", "Aceites", "Dulces", "Condimentos"], valuedefault: 'Abarrotes'},
+                    {label: 'Foto', field: 'foto', type: 'image', valuedefault: 'img/ghost.png', function: (event) => { upfile(event); }, typefunc: 'change'},
                     {label: '*', field: 'actions', type: 'button', buttons: ["add", "edit", "delete", "save", "btn_extra"]}
                 ],
                 footer: {
@@ -263,6 +264,25 @@
             });
         }
 
+        const upfile = (event) => {
+            const input = event.target || null;
+            const tr = event.target.closest('tr') || null;
+            const a = event.target.closest('td')
+            console.log(a, tr);
+            
+            const img = tr.querySelector('img') || null;
+            const file = input.files[0] || null;
+            if(file){
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img_src = e.target.result || '';
+                    console.log(img_src);
+                    img.src = img_src;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
         const search_code = (event) => {
             const t = event.key || '';
             switch(t){
@@ -275,8 +295,14 @@
                     if(row){
                         for(element of inputs){
                             const field = element.dataset.field || '';
-                            if(field !== '' && typeof row[field] !== "undefined"){
-                                element.value = row[field];
+                            console.log(field, element);
+                            
+                            if(field !== '' && typeof row[field] !== "undefined" && typeof element.value !== "undefined"){
+                                try{
+                                    element.value = row[field];
+                                }catch(e){
+                                    console.log(e);
+                                }
                             }
                         }
                     }else{

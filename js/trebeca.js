@@ -47,6 +47,13 @@ const trebeca = (config, data) => {
                     textarea.placeholder = field.placeholder || field.label || '';
                     textarea.value = unformatter(td.textContent || '', td.dataset.type) || '';
                     textarea.className = 'form-control form-control-sm';
+                    if(typeof field.valuedefault !== "undefined" && (textarea.value === "" || textarea.value === null)){
+                        textarea.value = field.valuedefault || '';
+                    }
+
+                    if(typeof field.typefunc === "string" && field.typefunc !== "" && typeof field.function === "function"){
+                        textarea.addEventListener(field.typefunc, (event) => { field.function(event); });
+                    }
                     td.innerHTML = '';
                     td.appendChild(textarea);
                     break;
@@ -57,14 +64,73 @@ const trebeca = (config, data) => {
                     const options = field.options || [];
                     for(const option of options){
                         const opt = document.createElement('option');
-                        opt.value = option.value || option.label || '';
-                        opt.textContent = option.label || option.value || '';
+                        opt.value = option.value || option.label || option || '';
+                        opt.textContent = option.label || option.value || option || '';
                         select.appendChild(opt);
                     }
                     select.value = unformatter(td.textContent || '', td.dataset.type) || '';
                     select.className = 'select-control select-control-sm';
+                    if(typeof field.valuedefault !== "undefined" && (select.value === "" || select.value === null)){
+                        select.value = field.valuedefault || '';
+                    }
+
+                    if(typeof field.typefunc === "string" && field.typefunc !== "" && typeof field.function === "function"){
+                        select.addEventListener(field.typefunc, (event) => { field.function(event); });
+                    }
                     td.innerHTML = '';
                     td.appendChild(select);
+                    break;
+                case 'image':
+                    const input_img = td.querySelector('img');
+                    const input_file = document.createElement('input');
+                    input_file.type = 'file';
+                    input_file.accept = 'image/*';
+                    input_file.style = 'display:none;';
+                    input_file.dataset.id = td.dataset.id || Date.now().toString();
+                    input_file.dataset.field = td.dataset.field || '';
+                    
+                    td.appendChild(input_file);
+                        
+                    if(typeof input_img !== "object" || input_img === null){
+                        const new_img = document.createElement('img');
+                        new_img.style = 'width:50px; height:50px; object-fit:cover; cursor:pointer;';
+                        new_img.dataset.id = td.dataset.id || Date.now().toString();
+                        new_img.dataset.field = td.dataset.field || '';
+                        new_img.alt = field.label || 'Imagen';
+                        new_img.src = unformatter(td.textContent || '', td.dataset.type) || field.valuedefault || 'img/ghost.png';
+                        if(typeof field.valuedefault !== "undefined" && (new_img.src === "" || new_img.src === null)){
+                            new_img.src = field.valuedefault || '';
+                        }
+
+                        if(typeof field.typefunc === "string" && field.typefunc !== "" && typeof field.function === "function"){
+                            input_file.addEventListener(field.typefunc, (event) => { field.function(event); });
+                            new_img.addEventListener('click', (event) => { console.log("click"); input_file.click(); });
+                        }
+                        td.innerHTML = '';
+                        td.appendChild(new_img);
+                    }else{
+                        if(typeof field.valuedefault !== "undefined" && (input_img.src === "" || input_img.src === null)){
+                            input_img.src = field.valuedefault || '';
+                        }
+
+                        if(typeof field.typefunc === "string" && field.typefunc !== "" && typeof field.function === "function"){
+                            input_file.addEventListener(field.typefunc, (event) => { field.function(event); });
+                            input_img.addEventListener('click', (event) => { console.log("click");
+                            input_file.click(); });
+                        }
+                    }
+                    //td.innerHTML = '';
+                    //td.appendChild(input_img);
+                    break;
+                default:
+                    const input_ = document.createElement('input');
+                    input_.dataset.id = td.dataset.id || Date.now().toString();
+                    input_.dataset.field = td.dataset.field || '';
+                    input_.placeholder = field.placeholder || field.label || '';
+                    input_.type = td.dataset.type || 'text';
+                    input_.value = unformatter(td.textContent || '', td.dataset.type) || '';
+                    td.innerHTML = '';
+                    td.appendChild(input_);
                     break;
             }
             
@@ -181,7 +247,7 @@ const trebeca = (config, data) => {
                             }
                             break;
                         default:
-                            td.textContent = formatter(value, col.type) || '';
+                            td.innerHTML = formatter(value, col.type) || '';
                             td.dataset.id = row.id || '';
                             td.dataset.field = col.field;
                             break;
@@ -226,6 +292,7 @@ const trebeca = (config, data) => {
             const col = columns[key];
             const td = document.createElement('td');
             td.dataset.type = col.type;
+            newRow.appendChild(td);
             if(col.type === 'button'){
                 td.dataset.buttons = true;
                 if (col.buttons.includes("edit")) {
@@ -271,23 +338,30 @@ const trebeca = (config, data) => {
                 }
             }else{
                 td.dataset.id = "_new";
+                td.innerHTML = formatter(col.valuedefault || '', col.type) || '';
+                //td.dataset.id = row.id || '';
                 td.dataset.field = col.field;
-                if(typeof col.add === "undefined" && col.add !== false){
-                    create_input(td,col);
-                }
             }
-
-            newRow.appendChild(td);
-
-            
         }
+
         tableBody.insertBefore(newRow, tableBody.firstChild);
-        
+        const tds = newRow.children;
+        for (const key in tds) {
+            const td = tds[key];
+            const col = columns[key];
+            if(typeof td === "object" && td.nodeName === "TD"){
+                if(td.className === "td_editable"){
+                    continue;
+                }
+                td.className = "td_editable";
+                create_input(td,col);
+            }
+        }
         // Hacer focus en el primer elemento editable después de añadir al DOM
         if(firstEditableElement) {
             setTimeout(() => {
                 firstEditableElement.focus();
-            }, 10);
+            }, 100);
         }
         
         if(typeof config.add === "function"){
@@ -315,20 +389,37 @@ const trebeca = (config, data) => {
             for (const td of tr_row.children) {
                 const col = columns.find(element => element.field === td.dataset.field);
                 if (td.nodeName === "TD" && td.dataset.type !== "button") {
-                    const input = td.querySelector('input');
-                    if (input) {
-                        valor = input.value || "";
-                        newItem[td.dataset.field] = valor;
-                        td.textContent = formatter(valor, col.type) || '';
-                        td.classList.remove('td_editable');
-                        
-                    }else{
-                        if(typeof col.operator !== "undefined" && col.operator !== ""){
-                            valor = 0;
-                            valor = operators(newItem, col.operator, col.reference);
+                    const col = columns.find(element => element.field === td.dataset.field);
+                    const input = td.querySelector('input, textarea, select');
+                    let valor = "";
+                    switch (col.type) {
+                        case 'text':
+                        case 'number':
+                        case 'email':
+                        case 'money':
+                        case 'select':
+                        case 'date':
+                            valor = input ? input.value || "" : td.textContent || "";
                             newItem[td.dataset.field] = valor;
                             td.textContent = formatter(valor, col.type) || '';
-                        }
+                            break;
+                        case 'image':
+                            const img = td.querySelector('img');
+                            valor = img ? img.src || "" : td.textContent || "";
+                            newItem[td.dataset.field] = valor;
+                            td.innerHTML = formatter(valor, col.type) || '';
+                            break;
+                        default:
+                            valor = td.textContent || "";
+                            newItem[td.dataset.field] = valor;
+                            td.textContent = formatter(valor, col.type) || '';
+                            break;
+                    }
+                    if(typeof col.operator !== "undefined" && col.operator !== ""){
+                        valor = 0;
+                        valor = operators(newItem, col.operator, col.reference);
+                        newItem[td.dataset.field] = valor;
+                        td.textContent = formatter(valor, col.type) || '';
                     }
                 }else{
                     const buttons = td.querySelectorAll('button');
@@ -364,20 +455,39 @@ const trebeca = (config, data) => {
                 for (const td of tr_row.children) {
                     if (td.nodeName === "TD" && td.dataset.type !== "button") {
                         const col = columns.find(element => element.field === td.dataset.field);
-                        const input = td.querySelector('input');
-                        if (input) {
-                            valor = input.value || "";
-                            data_show_item[td.dataset.field] = valor;
-                            td.textContent = formatter(valor, col.type) || '';
-                            td.classList.remove('td_editable');
-                        }else{
-                            if(typeof col.operator !== "undefined" && col.operator !== ""){
-                                valor = 0;
-                                valor = operators(data_show_item, col.operator, col.reference);
+                        const input = td.querySelector('input, textarea, select');
+                        let valor = "";
+                        switch (col.type) {
+                            case 'text':
+                            case 'number':
+                            case 'email':
+                            case 'money':
+                            case 'select':
+                            case 'date':
+                                valor = input ? input.value || "" : td.textContent || "";
                                 data_show_item[td.dataset.field] = valor;
                                 td.textContent = formatter(valor, col.type) || '';
-                            }
+                                break;
+                            case 'image':
+                                const img = td.querySelector('img');
+                                valor = img ? img.src || "" : td.textContent || "";
+                                data_show_item[td.dataset.field] = valor;
+                                td.innerHTML = formatter(valor, col.type) || '';
+                                break;
+                            default:
+                                valor = td.textContent || "";
+                                data_show_item[td.dataset.field] = valor;
+                                td.textContent = formatter(valor, col.type) || '';
+                                break;
                         }
+
+                        if(typeof col.operator !== "undefined" && col.operator !== ""){
+                            valor = 0;
+                            valor = operators(data_show_item, col.operator, col.reference);
+                            data_show_item[td.dataset.field] = valor;
+                            td.textContent = formatter(valor, col.type) || '';
+                        }
+                        
                     }else{
                         const buttons = td.querySelectorAll('button');
                         buttons.forEach(button => {
@@ -708,6 +818,9 @@ const trebeca = (config, data) => {
                 break;
             case 'email':
                 result = format_email(value);
+                break;
+            case 'image':
+                result = `<img src="${value || 'img/ghost.png'}" alt="Imagen" style="width:50px; height:50px; object-fit:cover;">`;
                 break;
             default:
                 result = value;
