@@ -9,28 +9,65 @@ const trebeca = (config, data) => {
 
     const create_input = (td, field) => {
         if(typeof td.dataset === "object" && typeof td.dataset.type === "string" && td.dataset.type !== "button"){
-            const input = document.createElement('input');
-            input.type = td.dataset.type || 'text';
-            input.value = unformatter(td.textContent || '', td.dataset.type) || '';
-            input.className = 'form-control form-control-sm';
-            input.dataset.id = td.dataset.id || Date.now().toString();
-            input.dataset.field = td.dataset.field || '';
-            input.placeholder = field.placeholder || field.label || '';
-            td.innerHTML = '';
-            
-            if(td.dataset.field === "id" && input.value === ""){
-                input.value = Date.now().toString();
-            }
+            switch (td.dataset.type) {
+                case 'checkbox':
+                    input = document.createElement('input');
+                    input.type = 'checkbox';
+                    break;
+                case 'date':
+                case 'text':
+                case 'number':
+                case 'email':
+                case 'url':
+                    const input = document.createElement('input');
+                    input.dataset.id = td.dataset.id || Date.now().toString();
+                    input.dataset.field = td.dataset.field || '';
+                    input.placeholder = field.placeholder || field.label || '';
+                    input.type = td.dataset.type || 'text';
+                    input.value = unformatter(td.textContent || '', td.dataset.type) || '';
+                    input.className = 'form-control form-control-sm';
+                    if(td.dataset.field === "id" && input.value === ""){
+                        input.value = Date.now().toString();
+                    }
 
-            if(typeof field.valuedefault !== "undefined" && (input.value === "" || input.value === null)){
-                input.value = field.valuedefault || '';
-            }
+                    if(typeof field.valuedefault !== "undefined" && (input.value === "" || input.value === null)){
+                        input.value = field.valuedefault || '';
+                    }
 
-            if(typeof field.typefunc === "string" && field.typefunc !== "" && typeof field.function === "function"){
-                input.addEventListener(field.typefunc, (event) => { field.function(event); });
+                    if(typeof field.typefunc === "string" && field.typefunc !== "" && typeof field.function === "function"){
+                        input.addEventListener(field.typefunc, (event) => { field.function(event); });
+                    }
+                    td.innerHTML = '';
+                    td.appendChild(input);
+                    break;
+                case 'textarea':
+                    const textarea = document.createElement('textarea');
+                    textarea.dataset.id = td.dataset.id || Date.now().toString();
+                    textarea.dataset.field = td.dataset.field || '';
+                    textarea.placeholder = field.placeholder || field.label || '';
+                    textarea.value = unformatter(td.textContent || '', td.dataset.type) || '';
+                    textarea.className = 'form-control form-control-sm';
+                    td.innerHTML = '';
+                    td.appendChild(textarea);
+                    break;
+                case 'select':
+                    const select = document.createElement('select');
+                    select.dataset.id = td.dataset.id || Date.now().toString();
+                    select.dataset.field = td.dataset.field || '';
+                    const options = field.options || [];
+                    for(const option of options){
+                        const opt = document.createElement('option');
+                        opt.value = option.value || option.label || '';
+                        opt.textContent = option.label || option.value || '';
+                        select.appendChild(opt);
+                    }
+                    select.value = unformatter(td.textContent || '', td.dataset.type) || '';
+                    select.className = 'select-control select-control-sm';
+                    td.innerHTML = '';
+                    td.appendChild(select);
+                    break;
             }
             
-            td.appendChild(input);
             td.classList.add('td_editable');
         }
     }
