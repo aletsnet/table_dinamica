@@ -104,7 +104,7 @@ const trebeca = (config, data) => {
 
                         if(typeof field.typefunc === "string" && field.typefunc !== "" && typeof field.function === "function"){
                             input_file.addEventListener(field.typefunc, (event) => { field.function(event); });
-                            new_img.addEventListener('click', (event) => { console.log("click"); input_file.click(); });
+                            new_img.addEventListener('click', (event) => { input_file.click(); });
                         }
                         td.innerHTML = '';
                         td.appendChild(new_img);
@@ -115,9 +115,7 @@ const trebeca = (config, data) => {
 
                         if(typeof field.typefunc === "string" && field.typefunc !== "" && typeof field.function === "function"){
                             input_file.addEventListener(field.typefunc, (event) => { field.function(event); });
-                            input_img.addEventListener('click', (event) => { console.log("click");
-                            input_file.click(); });
-                        }
+                            input_img.addEventListener('click', (event) => { input_file.click(); });}
                     }
                     //td.innerHTML = '';
                     //td.appendChild(input_img);
