@@ -97,7 +97,7 @@ const trebeca = (config, data) => {
                         new_img.dataset.id = td.dataset.id || Date.now().toString();
                         new_img.dataset.field = td.dataset.field || '';
                         new_img.alt = field.label || 'Imagen';
-                        new_img.src = unformatter(td.textContent || '', td.dataset.type) || field.valuedefault || 'img/ghost.png';
+                        new_img.src = unformatter(td.textContent || '', td.dataset.type) || field.valuedefault || '';
                         if(typeof field.valuedefault !== "undefined" && (new_img.src === "" || new_img.src === null)){
                             new_img.src = field.valuedefault || '';
                         }
@@ -818,7 +818,7 @@ const trebeca = (config, data) => {
                 result = format_email(value);
                 break;
             case 'image':
-                result = `<img src="${value || 'img/ghost.png'}" alt="Imagen" style="width:50px; height:50px; object-fit:cover;">`;
+                result = `<img src="${value}" alt="Imagen" style="width:50px; height:50px; object-fit:cover;">`;
                 break;
             default:
                 result = value;
