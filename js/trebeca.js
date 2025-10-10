@@ -69,7 +69,7 @@ const trebeca = (config, data) => {
                         select.appendChild(opt);
                     }
                     select.value = unformatter(td.textContent || '', td.dataset.type) || '';
-                    select.className = 'select-control select-control-sm';
+                    select.className = 'form-select form-select-sm';
                     if(typeof field.valuedefault !== "undefined" && (select.value === "" || select.value === null)){
                         select.value = field.valuedefault || '';
                     }
@@ -127,6 +127,7 @@ const trebeca = (config, data) => {
                     input_.placeholder = field.placeholder || field.label || '';
                     input_.type = td.dataset.type || 'text';
                     input_.value = unformatter(td.textContent || '', td.dataset.type) || '';
+                    input_.className = 'form-control form-control-sm';
                     td.innerHTML = '';
                     td.appendChild(input_);
                     break;
@@ -292,6 +293,7 @@ const trebeca = (config, data) => {
             td.dataset.type = col.type;
             newRow.appendChild(td);
             if(col.type === 'button'){
+                const buttons = config.buttons || {};
                 td.dataset.buttons = true;
                 if (col.buttons.includes("edit")) {
                     const button = document.createElement('button');
@@ -334,6 +336,20 @@ const trebeca = (config, data) => {
                     button_cancel.addEventListener('click', (event) => { cancel_item(event); });
                     td.appendChild(button_cancel);
                 }
+                if(typeof buttons !== "undefined" && Array.isArray(buttons)){
+                    for (const btn of buttons) {
+                        if(btn.modo == "row_extra") {
+                            const button = document.createElement('button');
+                            button.type = 'button';
+                            button.dataset.type = btn.type;
+                            button.dataset.id = '_new';
+                            button.className = btn.class;
+                            button.innerHTML = btn.label;
+                            button.addEventListener('click', (event) => { btn.function(event); });
+                            td.appendChild(button);
+                        }   
+                    }
+                }
             }else{
                 td.dataset.id = "_new";
                 td.innerHTML = formatter(col.valuedefault || '', col.type) || '';
@@ -352,7 +368,10 @@ const trebeca = (config, data) => {
                     continue;
                 }
                 td.className = "td_editable";
-                create_input(td,col);
+                const add = typeof col.add === "undefined" ? true : col.add;
+                if(add){
+                    create_input(td,col);
+                }
             }
         }
         // Hacer focus en el primer elemento editable después de añadir al DOM
@@ -386,6 +405,7 @@ const trebeca = (config, data) => {
             id_item = newItem.id;
             for (const td of tr_row.children) {
                 const col = columns.find(element => element.field === td.dataset.field);
+                td.className = "";
                 if (td.nodeName === "TD" && td.dataset.type !== "button") {
                     const col = columns.find(element => element.field === td.dataset.field);
                     const input = td.querySelector('input, textarea, select');
@@ -450,7 +470,8 @@ const trebeca = (config, data) => {
             id_item = id_;
             let data_show_item = data_show.find(item => { return item.id == id_; });
             if(typeof data_show_item.id !== "undefined"){
-                for (const td of tr_row.children) {
+                for(const td of tr_row.children) {
+                    td.className = "";
                     if (td.nodeName === "TD" && td.dataset.type !== "button") {
                         const col = columns.find(element => element.field === td.dataset.field);
                         const input = td.querySelector('input, textarea, select');
@@ -708,6 +729,17 @@ const trebeca = (config, data) => {
         return isNaN(number) ? amount : number.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
     }
 
+    const format_date = (date) => {
+        const d = new Date(date);
+        if (!isNaN(d)) {
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = d.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+        return date;
+    }
+
     const totalCount = () => {
         tableFoot.innerHTML = "";
         let c = data_show.length || 0;
@@ -817,6 +849,9 @@ const trebeca = (config, data) => {
             case 'email':
                 result = format_email(value);
                 break;
+            case 'date':
+                result = format_date(value);
+                break;
             case 'image':
                 result = `<img src="${value}" alt="Imagen" style="width:50px; height:50px; object-fit:cover;">`;
                 break;
@@ -841,6 +876,15 @@ const trebeca = (config, data) => {
             case 'email':
                 // Devuelve el email tal cual
                 result = value.trim();
+                break;
+            case 'date':
+                // Convierte a formato ISO (YYYY-MM-DD)
+                const parts = value.split('/');
+                if(parts.length === 3){
+                    result = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                }else{
+                    result = value;
+                }
                 break;
             default:
                 result = value;
