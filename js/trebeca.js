@@ -538,7 +538,7 @@ const trebeca = (config, data) => {
         
 
         if(typeof config.save === "function"){
-            config.save(id_item);
+            config.save(event);
         }
         //show_data();
         totalCount();
@@ -719,8 +719,6 @@ const trebeca = (config, data) => {
     }
 
     const format_email = (email) => {
-        //const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        //return emailPattern.test(email) ? email : 'Email inválido';
         return email.toLowerCase();
     }
 
