@@ -1,27 +1,72 @@
-# Proyecto HTML + Bootstrap + JavaScript Vanilla
+# tRebeca - Tabla Dinamica
 
-Un proyecto web sencillo y moderno que combina HTML5, Bootstrap 5 y JavaScript vanilla para crear una experiencia de usuario interactiva y responsiva.
+Es una herramienta que permite crear tablas dinamicas en un proyecto sencillo de html/html5
 
 ## 🚀 Características
 
-- **HTML5 Semántico**: Estructura moderna y accesible
-- **Bootstrap 5**: Framework CSS para diseño responsivo
-- **JavaScript Vanilla**: Sin dependencias adicionales
-- **Diseño Responsivo**: Optimizado para todos los dispositivos
-- **Componentes Interactivos**: Contador, formulario y navegación suave
-- **Animaciones CSS**: Efectos visuales atractivos
+- **Busquedas Blandas**: Permite hacer busquedas rapidas a diferentes campos
+- **Multitablas**: Permite tener varias tablas dinamicas en el mismo page
+- **Edicion Dinamica**: Permite Editar un registro con un doble click sobre el registro
+- **JavaScript Vanilla**: Se usa JS Vainilla
 
 ## 📁 Estructura del Proyecto
 
 ```
-table_dinamica/
-├── index.html          # Página principal
+proyecto/
+├── index.html          # Page donde se va implementar
 ├── css/
 │   └── style.css      # Estilos personalizados
 ├── js/
-│   └── script.js      # Funcionalidad JavaScript
-└── README.md          # Documentación
+    └── trebeca.js      # Funcionalidad tRebeca JavaScript
 ```
+
+## Configuracion
+
+```
+const config_default = {
+        search: {
+            value: '',
+            fields: ['campo1', 'campo2', 'campo...']
+        },
+        table: {
+            cols: [
+                //label: #titulo
+                //field: #campo
+                //type: #tipo de dato: text, number, phone, date, money, button
+                {label: 'ID', field: 'id', type: 'number', min: 1},
+                {label: 'Nombre', field: 'name', type : 'text'},
+                {label: 'Edad', field: 'age', type: 'number'},
+                {label: 'Ciudad', field: 'city', type: 'text'},
+                {label: 'Telefono', field: 'phone', type: 'phone'},
+                {label: 'Email', field: 'email', type: 'email'},
+                {label: 'Sueldo', field: 'salary', type: 'money'},
+                //recomedamos siempre incluir el campo id y conservar el un campo con los botones
+                {label: '*', field: 'actions', type: 'button', buttons: ["add", "edit", "delete", "save"]}
+            ],
+            footer: {
+                label: 'Total de registros:',
+                field: 'count',
+                type: 'text'
+            }
+        },
+        //Personalizar botones
+        //modo: "row_extra" permite añadir botones personalizados
+        buttons: [
+                    { name: "add", label: '<i class="fas fa-plus"></i>', class: 'btn btn-success btn-sm me-1', modo: "new"  },
+                    { name: "edit", label: '<i class="fas fa-edit"></i>', class: 'btn btn-warning btn-sm me-1', modo: "row" },
+                    { name: "delete", label: '<i class="fas fa-trash"></i>', class: 'btn btn-danger btn-sm me-1', modo: "row" },
+                    { name: "save", label: '<i class="fas fa-save"></i>', class: 'btn btn-success btn-sm me-1', modo: "row" },
+                    { name: "btn_extra", label: '<i class="fas fa-info-circle"></i>', class: 'btn btn-info btn-sm m-1', modo: "row_extra", function: (event) => { show_data(event) } },
+                ],
+        tableClass: 'miTabla',
+        // Usando referencias a funciones (más seguro que eval)
+        add: (event) => {btn_add(event)},
+        edit: (event) => {btn_edit(event)},
+        delete: (event) => {btn_delete(event)},   
+        save: (event) => {btn_save(event)},
+    };
+```
+
 
 ## 🛠️ Tecnologías Utilizadas
 
@@ -63,49 +108,14 @@ table_dinamica/
 1. Abre el archivo `index.html` en tu navegador
 2. ¡Listo! La página se cargará con todas las funcionalidades
 
-### Opción 2: Servidor Local
-```bash
-# Con Python 3
-python -m http.server 8000
-
-# Con Node.js (si tienes live-server)
-npx live-server
-
-# Con PHP
-php -S localhost:8000
-```
-
-Luego visita `http://localhost:8000`
-
-## 🎨 Personalización
-
-### Colores
-Los colores principales se definen en CSS custom properties:
-
-```css
-:root {
-    --primary-color: #0d6efd;
-    --secondary-color: #6c757d;
-    --success-color: #198754;
-    /* ... más colores */
-}
-```
-
 ### Funcionalidades JavaScript
-El archivo `js/script.js` incluye:
+El archivo `js/trebeca.js` incluye:
 
 - Contador interactivo
 - Validación de formularios
 - Sistema de notificaciones
 - Navegación suave
 - Animaciones
-
-### Componentes Bootstrap
-- Navbar responsivo
-- Cards informativas
-- Formularios estilizados
-- Sistema de grillas
-- Botones y componentes UI
 
 ## 📱 Compatibilidad
 
@@ -114,61 +124,5 @@ El archivo `js/script.js` incluye:
 - ✅ Safari 13+
 - ✅ Edge 80+
 - ✅ Dispositivos móviles
-
-## 🔧 Desarrollo
-
-### Estructura de Archivos
-- `index.html`: Estructura principal
-- `css/style.css`: Estilos personalizados
-- `js/script.js`: Lógica de la aplicación
-
-### Características del Código
-- Código comentado y bien estructurado
-- Funciones modulares y reutilizables
-- Event listeners organizados
-- Validaciones de formulario
-- Manejo de errores
-
-## 🌟 Próximas Mejoras
-
-- [ ] Modo oscuro/claro
-- [ ] Más animaciones CSS
-- [ ] Integración con APIs
-- [ ] Almacenamiento local
-- [ ] PWA (Progressive Web App)
-
-## 📝 Notas de Desarrollo
-
-### JavaScript Features
-- ES6+ syntax
-- Async/await ready
-- Modular functions
-- Event delegation
-- DOM manipulation
-
-### CSS Features
-- CSS Grid y Flexbox
-- Custom properties
-- Animations y transitions
-- Media queries
-- Bootstrap overrides
-
-## 🤝 Contribución
-
-1. Fork el proyecto
-2. Crea una rama para tu feature
-3. Commit tus cambios
-4. Push a la rama
-5. Abre un Pull Request
-
-## 📄 Licencia
-
-Este proyecto es de código abierto y está disponible bajo la [Licencia MIT](LICENSE).
-
-## 👨‍💻 Autor
-
-Desarrollado con ❤️ para aprender y practicar desarrollo web moderno.
-
----
 
 **¡Gracias por usar este proyecto!** Si te resulta útil, no olvides darle una ⭐.
