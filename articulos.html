@@ -199,7 +199,9 @@
                     {label: 'Unidad', field: 'unidad', type: 'text'},
                     {label: 'Cantidad', field: 'cantidad', type: 'number', edit: false},
                     {label: 'Total', field: 'total', type: 'money', operator: 'multiply', add: false, edit: false, reference: ["cantidad", "precio"]},
-                    {label: 'Categoría', field: 'categoria', type: 'select', options:["Abarrotes","Panaderia", "Lacteos", "Huevos", "Embutidos", "Verduras", "Frutas", "Carnes", "Cereales", "Aceites", "Dulces", "Condimentos"], valuedefault: 'Abarrotes'},
+                    {label: 'Categoría', field: 'categoria', type: 'select', 
+                        options:["Abarrotes","Panaderia", "Lacteos", "Huevos", "Embutidos", "Verduras", "Frutas", "Carnes", "Cereales", "Aceites", "Dulces",
+                         "Condimentos"], valuedefault: 'Abarrotes'},
                     {label: 'Foto', field: 'foto', type: 'image', valuedefault: 'img/ghost.png', function: (event) => { upfile(event); }, typefunc: 'change'},
                     {label: '*', field: 'actions', type: 'button', buttons: ["add", "edit", "delete", "save", "btn_extra"]}
                 ],
@@ -214,7 +216,8 @@
                 { name: "edit", label: '<i class="fas fa-edit"></i>', class: 'btn btn-warning btn-sm me-1', modo: "row" },
                 { name: "delete", label: '<i class="fas fa-trash"></i>', class: 'btn btn-danger btn-sm me-1', modo: "row" },
                 { name: "save", label: '<i class="fas fa-save"></i>', class: 'btn btn-success btn-sm me-1', modo: "row" },
-                { name: "btn_extra", label: '<i class="fas fa-info-circle"></i>', class: 'btn btn-info btn-sm m-1', modo: "row_extra", function: (event) => { other_function(event); } },
+                { name: "btn_extra", label: '<i class="fas fa-info-circle"></i>', class: 'btn btn-info btn-sm m-1', 
+                modo: "row_extra", function: (event) => { other_function(event); } },
             ],
             tableClass: 'trebeca',
             // Usando referencias a funciones (más seguro que eval)
@@ -311,9 +314,8 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', trebeca(config_default, data));
+        trebeca(config_default, data);
 
-        
     </script>
 </body>
 </html>
