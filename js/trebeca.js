@@ -234,6 +234,11 @@ const trebeca = (config, data) => {
                                 for (const btn of buttons) {
                                     if(btn.modo == "row_extra") {
                                         const button = document.createElement('button');
+                                        if(typeof btn.property === "object"){
+                                            for(const prop in btn.property){
+                                                button.setAttribute(prop, btn.property[prop]);
+                                            }
+                                        }
                                         button.type = 'button';
                                         button.dataset.type = btn.type;
                                         button.dataset.id = row.id || '';
