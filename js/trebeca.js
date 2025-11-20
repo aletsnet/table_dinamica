@@ -1,11 +1,31 @@
 const trebeca = (config, data) => {
     const table_rebeca = document.querySelector("#" + config.tableClass);
-    const tableHead = table_rebeca.querySelector('thead');
-    const tableBody = table_rebeca.querySelector('tbody');
-    const tableFoot = table_rebeca.querySelector('tfoot');
+    let tableHead = table_rebeca.querySelector('thead');
+    let tableBody = table_rebeca.querySelector('tbody');
+    let tableFoot = table_rebeca.querySelector('tfoot');
     let data_show = data;
     let page_show = 0;
     let count_row = 0;
+
+    //si no hay header
+    if(!tableHead){
+        const thead = document.createElement('thead');
+        table_rebeca.appendChild(thead);
+        tableHead = thead;
+    }
+    //si no hay body
+    if(!tableBody){
+        const tbody = document.createElement('tbody');
+        table_rebeca.appendChild(tbody);
+        tableBody = tbody;
+    }
+    //si no hay foot
+    if(!tableFoot){
+        const tfoot = document.createElement('tfoot');
+        table_rebeca.appendChild(tfoot);
+        tableFoot = tfoot;
+    }
+
 
     const create_input = (td, field) => {
         if(typeof td.dataset === "object" && typeof td.dataset.type === "string" && td.dataset.type !== "button"){
@@ -379,7 +399,7 @@ const trebeca = (config, data) => {
                 }
             }
         }
-        // Hacer focus en el primer elemento editable después de añadir al DOM
+
         if(firstEditableElement) {
             setTimeout(() => {
                 firstEditableElement.focus();
@@ -395,153 +415,18 @@ const trebeca = (config, data) => {
         const td_bts = event.target.closest('td');
         const tr_row = td_bts.closest('tr');
         const columns = config.table.cols;
-        let id_item = tr_row.dataset.id || "";
-        
         if(tr_row.dataset.id === "_new"){
-            const newItem = {};
-            for (const key in columns) {
-                const col = columns[key];
-                if(col.type !== "button"){
-                    newItem[col.field] = "";
-                }
-            }
-            newItem.id = Date.now().toString(); // Genera un ID único basado en la marca de tiempo
-            tr_row.dataset.id = newItem.id;
-            id_item = newItem.id;
-            for (const td of tr_row.children) {
-                const col = columns.find(element => element.field === td.dataset.field);
-                td.className = "";
-                if (td.nodeName === "TD" && td.dataset.type !== "button") {
-                    const col = columns.find(element => element.field === td.dataset.field);
-                    const input = td.querySelector('input, textarea, select');
-                    let valor = "";
-                    switch (col.type) {
-                        case 'text':
-                        case 'number':
-                        case 'email':
-                        case 'money':
-                        case 'select':
-                        case 'date':
-                            valor = input ? input.value || "" : td.textContent || "";
-                            newItem[td.dataset.field] = valor;
-                            td.textContent = formatter(valor, col.type) || '';
-                            break;
-                        case 'image':
-                            const img = td.querySelector('img');
-                            valor = img ? img.src || "" : td.textContent || "";
-                            newItem[td.dataset.field] = valor;
-                            td.innerHTML = formatter(valor, col.type) || '';
-                            break;
-                        default:
-                            valor = td.textContent || "";
-                            newItem[td.dataset.field] = valor;
-                            td.textContent = formatter(valor, col.type) || '';
-                            break;
-                    }
-                    if(typeof col.operator !== "undefined" && col.operator !== ""){
-                        valor = 0;
-                        valor = operators(newItem, col.operator, col.reference);
-                        newItem[td.dataset.field] = valor;
-                        td.textContent = formatter(valor, col.type) || '';
-                    }
-                }else{
-                    const buttons = td.querySelectorAll('button');
-                    buttons.forEach(button => {
-                        if(typeof button.dataset === "object" && typeof button.dataset.type === "string"){
-                            switch (button.dataset.type) {
-                                case 'edit':
-                                    button.style = 'display: normal;';
-                                    break;
-                                case 'delete':
-                                    button.style = 'display: normal;';
-                                    break;
-                                case 'save':
-                                    button.style = 'display: none;';
-                                    break;
-                                case 'cancel':
-                                    button.style = 'display: none;';
-                                    break;
-                                default:
-                                    button.style = 'display: normal;';
-                                    break;
-                            }
-                        }
-                    });
-                }
-            }
-            data.push(newItem);
+            const item = show_item(tr_row);
+            data.push(item);
         }else{
-            let id_ = tr_row.dataset.id;
-            id_item = id_;
-            let data_show_item = data_show.find(item => { return item.id == id_; });
-            if(typeof data_show_item.id !== "undefined"){
-                for(const td of tr_row.children) {
-                    td.className = "";
-                    if (td.nodeName === "TD" && td.dataset.type !== "button") {
-                        const col = columns.find(element => element.field === td.dataset.field);
-                        const input = td.querySelector('input, textarea, select');
-                        let valor = "";
-                        switch (col.type) {
-                            case 'text':
-                            case 'number':
-                            case 'email':
-                            case 'money':
-                            case 'select':
-                            case 'date':
-                                valor = input ? input.value || "" : td.textContent || "";
-                                data_show_item[td.dataset.field] = valor;
-                                td.textContent = formatter(valor, col.type) || '';
-                                break;
-                            case 'image':
-                                const img = td.querySelector('img');
-                                valor = img ? img.src || "" : td.textContent || "";
-                                data_show_item[td.dataset.field] = valor;
-                                td.innerHTML = formatter(valor, col.type) || '';
-                                break;
-                            default:
-                                valor = td.textContent || "";
-                                data_show_item[td.dataset.field] = valor;
-                                td.textContent = formatter(valor, col.type) || '';
-                                break;
-                        }
-
-                        if(typeof col.operator !== "undefined" && col.operator !== ""){
-                            valor = 0;
-                            valor = operators(data_show_item, col.operator, col.reference);
-                            data_show_item[td.dataset.field] = valor;
-                            td.textContent = formatter(valor, col.type) || '';
-                        }
-                        
-                    }else{
-                        const buttons = td.querySelectorAll('button');
-                        buttons.forEach(button => {
-                            if(typeof button.dataset === "object" && typeof button.dataset.type === "string"){
-                                switch (button.dataset.type) {
-                                    case 'edit':
-                                        button.style = 'display: normal;';
-                                        break;
-                                    case 'delete':
-                                        button.style = 'display: normal;';
-                                        break;
-                                    case 'save':
-                                        button.style = 'display: none;';
-                                        break;
-                                    case 'cancel':
-                                        button.style = 'display: none;';
-                                        break;
-                                    default:
-                                        button.style = 'display: normal;';
-                                        break;
-                                }
-                            }
-                        });
-                    }
-                }
+            const item = show_item(tr_row);
+            const index = data.findIndex(i => i.id === item.id);
+            if(index !== -1){
+                data[index] = item;
             }
+            
         }
         
-        
-
         if(typeof config.save === "function"){
             config.save(event);
         }
@@ -667,24 +552,60 @@ const trebeca = (config, data) => {
         }
     }
 
-    const cancel_item = (event) => {
-        const td_bts = event.target.closest('td');
-        const tr_row = td_bts.closest('tr');
-        for (const key in tr_row.children) {
-            const td = tr_row.children[key];
-            if(typeof td === "object" && td.nodeName === "TD"){
-                td.classList.remove('td_editable');
+    const show_item = (tr) => {
+        const item = {};
+        const columns = config.table.cols;
+        let id_item = tr.dataset.id || "";
+        for (const key in columns) {
+            const col = columns[key];
+            if(col.type !== "button"){
+                item[col.field] = "";
             }
-
+        }
+        
+        if(id_item !== "" && id_item !== "_new"){
+            id_item = item.id;
+        }else{
+            item.id = Date.now().toString(); // Genera un ID único basado en la marca de tiempo
+            tr.dataset.id = item.id;
+        }
+        for (const td of tr.children) {
+            //const col = columns.find(element => element.field === td.dataset.field);
+            td.className = "";
             if (td.nodeName === "TD" && td.dataset.type !== "button") {
-                const input = td.querySelector('input');
-                if (input) {
-                    td.textContent = input.value;
-                    td.classList.remove('td_editable');
+                const col = columns.find(element => element.field === td.dataset.field);
+                const input = td.querySelector('input, textarea, select');
+                let valor = "";
+                switch (col.type) {
+                    case 'text':
+                    case 'number':
+                    case 'email':
+                    case 'money':
+                    case 'select':
+                    case 'date':
+                        valor = input ? input.value || "" : td.textContent || "";
+                        item[td.dataset.field] = valor;
+                        td.textContent = formatter(valor, col.type) || '';
+                        break;
+                    case 'image':
+                        const img = td.querySelector('img');
+                        valor = img ? img.src || "" : td.textContent || "";
+                        item[td.dataset.field] = valor;
+                        td.innerHTML = formatter(valor, col.type) || '';
+                        break;
+                    default:
+                        valor = td.textContent || "";
+                        if(typeof col.operator !== "undefined" && col.operator !== ""){
+                            valor = 0;
+                            valor = operators(item, col.operator, col.reference);
+                            item[td.dataset.field] = valor;
+                            td.textContent = formatter(valor, col.type) || '';
+                        }
+                        item[td.dataset.field] = valor;
+                        td.textContent = formatter(valor, col.type) || '';
+                        break;
                 }
-            }
-
-            if(typeof td.dataset === "object" && typeof td.dataset.buttons === "string"){
+            }else{
                 const buttons = td.querySelectorAll('button');
                 buttons.forEach(button => {
                     if(typeof button.dataset === "object" && typeof button.dataset.type === "string"){
@@ -709,6 +630,14 @@ const trebeca = (config, data) => {
                 });
             }
         }
+        return item;
+    }
+
+    const cancel_item = (event) => {
+        const td_bts = event.target.closest('td');
+        const tr_row = td_bts.closest('tr');
+        
+        let item = show_item(tr_row);
 
         if(typeof config.cancel === "function"){
             config.cancel(event);

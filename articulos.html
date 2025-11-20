@@ -44,65 +44,7 @@
                         Mi tabla dinamica
                     </h3>
                     <table id="trebeca" class="table table-striped trebeca" >
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Edad</th>
-                                <th>Ciudad</th>
-                                <th>
-                                    <button type="button" class="btn btn-success btn-sm me-1 btn-add-row">
-                                        <i class="fas fa-plus"></i>
-                                    </button>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Ana</td>
-                                <td>28</td>
-                                <td>Madrid</td>
-                                <td>
-                                    <button type="button" class="btn btn-warning btn-sm me-1 edit-btn">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-danger btn-sm delete-btn">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Juan</td>
-                                <td>34</td>
-                                <td>Barcelona</td>
-                                <td>
-                                    <button type="button" class="btn btn-warning btn-sm me-1 edit-btn">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-danger btn-sm delete-btn">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Laura</td>
-                                <td>25</td>
-                                <td>Valencia</td>
-                                <td>
-                                    <button type="button" class="btn btn-warning btn-sm me-1 edit-btn">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-danger btn-sm delete-btn">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="3" class="text-end fw-bold">Total de registros:</td>
-                                <td class="fw-bold" id="totalCount">3</td>
-                            </tr>
-                        </tfoot>
+                        
                     </table>
                     
                     <!-- Modal para añadir/editar registro -->
@@ -189,7 +131,12 @@
         const config_default = {
             search: {
                 value: '',
-                fields: ['code','nombre', 'categoria']
+                fields: ['code','nombre', 'categoria'],
+                buttons: [
+                    { label: '<i class="fas fa-search"></i> Buscar', class: 'btn btn-primary btn-sm me-1', function: (event) => { console.log('Buscar'); } },
+                    { label: '<i class="fas fa-eraser"></i> Limpiar', class: 'btn btn-secondary btn-sm me-1', function: (event) => { console.log('Limpiar búsqueda'); } },
+                    { label: '<i class="fas fa-file-xls"></i> Exportar', class: 'btn btn-secondary btn-sm me-1', function: (event) => { console.log('Exportar'); } }
+                ]
             },
             table: {
                 cols: [
