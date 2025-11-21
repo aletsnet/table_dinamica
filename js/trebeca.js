@@ -579,6 +579,8 @@ const trebeca = (config, data) => {
                 switch (col.type) {
                     case 'text':
                     case 'number':
+                    case 'textarea':
+                    case 'phone':
                     case 'email':
                     case 'money':
                     case 'select':
